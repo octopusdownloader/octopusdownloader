@@ -1,4 +1,6 @@
 # octopusdownloader
+[![Build Status](https://travis-ci.com/octopusdownloader/octopusdownloader.svg?branch=master)](https://travis-ci.com/octopusdownloader/octopusdownloader)
+
 A simple crossplatform downloader powered by Java
 
 # Development
@@ -12,7 +14,7 @@ We use gradle as the build tool. With IntelliJ you can also import the project a
 (With IntelliJ Gradle comes by default)
 
 ### To run the application
-- ./gradlew jfxRun
+- `./gradlew jfxRun`
 
 ### To build native installers(refer Oracle guide for more info)
-- ./gradlew jfxNative
+- `./gradlew jfxNative`
