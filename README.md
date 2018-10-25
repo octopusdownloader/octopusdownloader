@@ -1,4 +1,6 @@
 # octopusdownloader
+[![Build Status](https://travis-ci.com/octopusdownloader/octopusdownloader.svg?branch=master)](https://travis-ci.com/octopusdownloader/octopusdownloader)
+
 A simple crossplatform downloader powered by Java
 
 # Development
