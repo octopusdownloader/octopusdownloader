@@ -1,0 +1,36 @@
+group 'octopusdownloader'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+apply plugin: 'javafx-gradle-plugin'
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'Main'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'Octopus Org.'
+}
