@@ -1,4 +1,17 @@
+# idea
 .idea
 *.iml
+out
+
+#gradle
 .gradle
 build
+bin
+
+# eclipse
+.project
+.classpath
+.settings
+
+# macOS
+.DS_Store
