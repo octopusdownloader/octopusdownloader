@@ -29,7 +29,7 @@ dependencies {
 
 jfx {
     // minimal requirement for jfxJar-task
-    mainClass = 'Main'
+    mainClass = 'com.octopus.Main'
 
     // minimal requirement for jfxNative-task
     vendor = 'Octopus Org.'
