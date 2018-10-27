@@ -1,4 +1,7 @@
 # octopusdownloader
+
+![octopus](https://user-images.githubusercontent.com/13379595/47604595-9b56e180-da19-11e8-93cf-a4174fa0ad38.png)
+
 [![Build Status](https://travis-ci.com/octopusdownloader/octopusdownloader.svg?branch=master)](https://travis-ci.com/octopusdownloader/octopusdownloader)
 
 A simple crossplatform downloader powered by Java
