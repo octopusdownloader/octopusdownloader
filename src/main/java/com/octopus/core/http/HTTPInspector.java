@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class HTTPInspector {
     private URL url;
+    private URL finalURL;
     private Proxy proxy;
     private int timeout;
     private boolean isAcceptingRanges = false;
@@ -17,30 +18,61 @@ public class HTTPInspector {
     private long lastModified;
     private long expiration;
     private String host;
-    private int statusCode;
+    private int responseCode;
+    private int maxRedirects;
     private Map<String, List<String>> headers;
 
-    public HTTPInspector(URL url, Proxy proxy, int timeout) {
+    /**
+     * HTTPInspector will inspect a given URL, redirect if necessary
+     *
+     * @param url          The url to inspect
+     * @param proxy        Proxy settings, by default NO_PROXY
+     * @param timeout      Timeout in ms
+     * @param maxRedirects Maximum number of redirects for inspect, throws RedirectLimitException
+     */
+    public HTTPInspector(URL url, Proxy proxy, int timeout, int maxRedirects) {
         this.url = url;
         this.proxy = proxy;
         this.timeout = timeout;
+        this.maxRedirects = maxRedirects;
     }
 
-    public void Inspect() throws Exception {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
-        connection.setConnectTimeout(timeout);
-        connection.setRequestMethod("HEAD");
-        connection.connect();
+    public void inspect() throws Exception {
+        this.finalURL = findRedirectedFinalURL(this.url, maxRedirects);
 
-        headers = connection.getHeaderFields();
-        statusCode = connection.getResponseCode();
-        contentLength = connection.getContentLength();
-        contentType = connection.getContentType();
-        lastModified = connection.getLastModified();
-        expiration = connection.getExpiration();
-        host = connection.getHeaderField("Host");
+        HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection(proxy);
+        urlConnection.setRequestProperty("User-Agent", "OctopusDM");
+        urlConnection.setConnectTimeout(timeout);
+        urlConnection.setInstanceFollowRedirects(false);
+        urlConnection.connect();
 
-        System.out.println(statusCode);
+        if (!urlConnection.getHeaderField("Accept-Ranges").isEmpty()) isAcceptingRanges = true;
+
+    }
+
+    URL findRedirectedFinalURL(URL url, int maxAttempts) throws Exception {
+        if (maxAttempts <= 0) {
+            throw new RedirectLimitException(maxRedirects);
+        }
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection(proxy);
+        urlConnection.setRequestProperty("User-Agent", "OctopusDM");
+        urlConnection.setConnectTimeout(timeout);
+        urlConnection.setInstanceFollowRedirects(false);
+        urlConnection.connect();
+
+        int respCode = urlConnection.getResponseCode();
+
+        if (respCode >= 300 && respCode < 400) {
+            String location = urlConnection.getHeaderField("Location");
+            if (location == null || location.isEmpty())
+                throw new RedirectException("Cannot find the location for redirect");
+            URL newLocation = new URL(location);
+
+            return findRedirectedFinalURL(newLocation, maxAttempts - 1);
+        }
+
+        return url;
     }
 
     public URL getUrl() {
@@ -71,7 +103,31 @@ public class HTTPInspector {
         return host;
     }
 
-    public int getStatusCode() {
-        return statusCode;
+    public int getResponseCode() {
+        return responseCode;
+    }
+
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public long getExpiration() {
+        return expiration;
+    }
+
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
+
+    public URL getFinalURL() {
+        return finalURL;
+    }
+
+    public int getMaxRedirects() {
+        return maxRedirects;
     }
 }
