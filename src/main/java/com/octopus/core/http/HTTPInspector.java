@@ -3,6 +3,8 @@ package com.octopus.core.http;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public class HTTPInspector {
     private URL url;
@@ -16,6 +18,7 @@ public class HTTPInspector {
     private long expiration;
     private String host;
     private int statusCode;
+    private Map<String, List<String>> headers;
 
     public HTTPInspector(URL url, Proxy proxy, int timeout) {
         this.url = url;
@@ -26,12 +29,18 @@ public class HTTPInspector {
     public void Inspect() throws Exception {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
         connection.setConnectTimeout(timeout);
+        connection.setRequestMethod("HEAD");
+        connection.connect();
+
+        headers = connection.getHeaderFields();
         statusCode = connection.getResponseCode();
         contentLength = connection.getContentLength();
         contentType = connection.getContentType();
         lastModified = connection.getLastModified();
         expiration = connection.getExpiration();
         host = connection.getHeaderField("Host");
+
+        System.out.println(statusCode);
     }
 
     public URL getUrl() {
