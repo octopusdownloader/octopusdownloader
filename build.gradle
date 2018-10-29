@@ -25,6 +25,9 @@ apply plugin: 'javafx-gradle-plugin'
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    
+    // https://mvnrepository.com/artifact/org.mock-server/mockserver-netty
+    testCompile group: 'org.mock-server', name: 'mockserver-netty', version: '5.4.1'
 }
 
 jfx {
