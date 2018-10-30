@@ -14,10 +14,8 @@ public class HTTPInspector {
     private boolean isAcceptingRanges = false;
     private long contentLength;
     private String contentType;
-    private String fileName;
     private long lastModified;
     private long expiration;
-    private String host;
     private int responseCode;
     private int maxRedirects;
     private Map<String, List<String>> headers;
@@ -37,9 +35,13 @@ public class HTTPInspector {
         this.maxRedirects = maxRedirects;
     }
 
+    /**
+     * Inspects the URL and obtains a stable resource URL with properties.
+     *
+     * @throws Exception Throws exceptions on failures
+     */
     public void inspect() throws Exception {
-        this.finalURL = findRedirectedFinalURL(this.url, maxRedirects);
-
+        finalURL = findRedirectedFinalURL(url, maxRedirects);
         HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection(proxy);
         urlConnection.setRequestProperty("User-Agent", "OctopusDM");
         urlConnection.setConnectTimeout(timeout);
@@ -47,7 +49,12 @@ public class HTTPInspector {
         urlConnection.connect();
 
         if (!urlConnection.getHeaderField("Accept-Ranges").isEmpty()) isAcceptingRanges = true;
-
+        contentLength = urlConnection.getContentLength();
+        contentType = urlConnection.getContentType();
+        lastModified = urlConnection.getLastModified();
+        expiration = urlConnection.getExpiration();
+        responseCode = urlConnection.getResponseCode();
+        headers = urlConnection.getHeaderFields();
     }
 
     URL findRedirectedFinalURL(URL url, int maxAttempts) throws Exception {
@@ -75,7 +82,7 @@ public class HTTPInspector {
         return url;
     }
 
-    public URL getUrl() {
+    public URL getOriginalUrl() {
         return url;
     }
 
@@ -92,15 +99,11 @@ public class HTTPInspector {
     }
 
     public String getFileName() {
-        return fileName;
+        return HTTPUtils.extractFileNameFromURL(this.finalURL);
     }
 
     public long getLastModified() {
         return lastModified;
-    }
-
-    public String getHost() {
-        return host;
     }
 
     public int getResponseCode() {
