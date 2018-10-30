@@ -4,9 +4,16 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'jacoco'
 apply plugin: 'javafx-gradle-plugin'
+apply plugin: "jacoco"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
 
 buildscript {
     dependencies {
@@ -16,12 +23,6 @@ buildscript {
         mavenLocal()
         mavenCentral()
     }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    mavenLocal()
 }
 
 dependencies {
@@ -46,8 +47,6 @@ jacocoTestReport {
     }
 }
 
-check.dependsOn jacocoTestReport
-
 jfx {
     // minimal requirement for jfxJar-task
     mainClass = 'com.octopus.Main'
@@ -55,3 +54,5 @@ jfx {
     // minimal requirement for jfxNative-task
     vendor = 'Octopus Org.'
 }
+
+check.dependsOn jacocoTestReport
