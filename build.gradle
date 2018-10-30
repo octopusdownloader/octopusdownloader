@@ -2,8 +2,11 @@ group 'octopusdownloader'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'javafx-gradle-plugin'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 buildscript {
     dependencies {
@@ -21,11 +24,29 @@ repositories {
     mavenLocal()
 }
 
-apply plugin: 'javafx-gradle-plugin'
-
 dependencies {
-    testCompile 'junit:junit:4.12'
+    // https://mvnrepository.com/artifact/junit/junit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    // https://mvnrepository.com/artifact/org.mock-server/mockserver-netty
+    testCompile group: 'org.mock-server', name: 'mockserver-netty', version: '5.4.1'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8.1'
 }
+
+subprojects {
+    test.useJUnit()
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+check.dependsOn jacocoTestReport
 
 jfx {
     // minimal requirement for jfxJar-task
