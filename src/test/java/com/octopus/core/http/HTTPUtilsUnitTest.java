@@ -30,7 +30,7 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
-public class HTTPUtilsTest {
+public class HTTPUtilsUnitTest {
     // Tests for extractFileNameFromURL
     @Test
     public void shouldExtractFileNameFromURLWithNoQuery() throws Exception {
