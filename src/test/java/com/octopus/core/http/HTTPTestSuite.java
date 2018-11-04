@@ -33,6 +33,11 @@ import org.mockserver.model.Header;
 import org.mockserver.model.HttpRequest;
 import org.mockserver.model.HttpResponse;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         HTTPInspectorTest.class,
@@ -42,8 +47,9 @@ public class HTTPTestSuite {
     private static ClientAndServer mockServer;
 
     @BeforeClass
-    public static void startMockServer() {
+    public static void startMockServer() throws Exception {
         System.out.println("Setting up mock server");
+
         mockServer = ClientAndServer.startClientAndServer(7088);
 
         mockServer.when(
@@ -88,6 +94,38 @@ public class HTTPTestSuite {
                         .withStatusCode(301)
                         .withHeader("Location", "http://localhost:7088/path/to/file.txt")
         );
+
+        Path image = Paths.get("src", "test", "resources", "image.jpg");
+        byte[] imageBytes = Files.readAllBytes(image);
+        mockServer.when(
+                HttpRequest
+                        .request()
+                        .withMethod("GET")
+                        .withPath("/data/image.jpg")
+        ).respond(
+                HttpResponse
+                        .response()
+                        .withStatusCode(200)
+                        .withHeader("Content-Length", Integer.toString(imageBytes.length))
+                        .withHeader("Content-Type", "image/jpg")
+                        .withBody(imageBytes)
+        );
+
+        mockServer.when(
+                HttpRequest
+                        .request()
+                        .withMethod("GET")
+                        .withPath("/data/partial/image.jpg")
+                        .withHeader("Range", "bytes=0-1023")
+        ).respond(
+                HttpResponse
+                        .response()
+                        .withStatusCode(206)
+                        .withHeader("Content-Length", "1024")
+                        .withHeader("Content-Range", "0-1023/" + Integer.toString(imageBytes.length))
+                        .withBody(Arrays.copyOfRange(imageBytes, 0, 1024))
+        );
+
     }
 
     @AfterClass
