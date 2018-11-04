@@ -25,7 +25,16 @@
 package com.octopus.core;
 
 public interface Downloadable {
+    /**
+     * Download a file from any service
+     *
+     * @throws Exception
+     */
     void download() throws Exception;
 
+    /**
+     * Returns the total bytes received for download
+     * @return Total bytes transferred
+     */
     long receivedBytes();
 }
