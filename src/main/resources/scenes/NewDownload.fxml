@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="89.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.NewDownloadController">
+    <top>
+        <HBox prefHeight="30.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label prefHeight="17.0" prefWidth="573.0" text=" Enter new address to Download">
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" top="10.0" />
+                    </HBox.margin>
+                </Label>
+            </children>
+        </HBox>
+    </top>
+    <left>
+        <HBox prefHeight="122.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" prefHeight="22.0" prefWidth="117.0" text="Address" textAlignment="CENTER" />
+                <TextField prefHeight="25.0" prefWidth="345.0" promptText="Enter the Address">
+                    <HBox.margin>
+                        <Insets right="10.0" />
+                    </HBox.margin>
+                </TextField>
+                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="60.0" text="Ok">
+                    <HBox.margin>
+                        <Insets right="8.0" />
+                    </HBox.margin>
+                </Button>
+                <Button mnemonicParsing="false" text="Cancel" />
+            </children>
+        </HBox>
+    </left>
+</BorderPane>
