@@ -10,7 +10,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <top>
-      <CheckBox mnemonicParsing="false" text="CheckBox" BorderPane.alignment="CENTER" />
+      <CheckBox mnemonicParsing="false" prefHeight="84.0" prefWidth="111.0" text="CheckBox" BorderPane.alignment="CENTER" />
    </top>
    <left>
       <Button mnemonicParsing="false" text="Button" underline="true" BorderPane.alignment="CENTER">
