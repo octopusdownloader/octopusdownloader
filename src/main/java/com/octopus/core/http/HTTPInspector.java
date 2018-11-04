@@ -72,7 +72,8 @@ public class HTTPInspector {
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.connect();
 
-        if (!urlConnection.getHeaderField("Accept-Ranges").isEmpty()) isAcceptingRanges = true;
+        String acceptRanges = urlConnection.getHeaderField("Accept-Ranges");
+        if (acceptRanges != null && !acceptRanges.equals("none")) isAcceptingRanges = true;
         contentLength = urlConnection.getContentLength();
         contentType = urlConnection.getContentType();
         lastModified = urlConnection.getLastModified();
