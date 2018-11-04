@@ -72,7 +72,7 @@ public class HTTPDownload implements Downloadable {
         }
     }
 
-    void startDownload(InputStream inputStream) throws Exception {
+    private void startDownload(InputStream inputStream) throws Exception {
         ReadableByteChannel inChan = Channels.newChannel(inputStream);
         FileChannel outChan = FileChannel.open(file,
                 StandardOpenOption.CREATE,
@@ -89,7 +89,7 @@ public class HTTPDownload implements Downloadable {
             receivedBytes += n;
             double elapsed = (System.nanoTime() - startTime);
             startTime = System.nanoTime();
-            System.out.println("Elasped = " + elapsed + " Transferred = " + n + " bytes Transfer rate = " + ((n / 1e6) / elapsed));
+            System.out.println("Elapsed = " + elapsed + " Transferred = " + n + " bytes Transfer rate = " + ((n / 1e6) / elapsed));
         }
 
         inChan.close();
