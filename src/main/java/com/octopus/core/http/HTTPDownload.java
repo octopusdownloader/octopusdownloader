@@ -39,15 +39,13 @@ import java.nio.file.StandardOpenOption;
 public class HTTPDownload implements Downloadable {
     private URL url;
     private Path file;
-    private long size;
     private long from;
     private long to;
     private long receivedBytes;
 
-    public HTTPDownload(URL url, Path file, long size, long from, long to) {
+    public HTTPDownload(URL url, Path file, long from, long to) {
         this.url = url;
         this.file = file;
-        this.size = size;
         this.from = from;
         this.to = to;
     }
@@ -88,9 +86,10 @@ public class HTTPDownload implements Downloadable {
             byteBuffer.flip();
             int n = outChan.write(byteBuffer);
             byteBuffer.rewind();
-            double elapsed = (System.nanoTime() - startTime) / 1e9;
-            System.out.println("Transferred = " + n + "bytes Transfer rate = " + (double) n / elapsed);
             receivedBytes += n;
+            double elapsed = (System.nanoTime() - startTime);
+            startTime = System.nanoTime();
+            System.out.println("Elasped = " + elapsed + " Transferred = " + n + " bytes Transfer rate = " + ((n / 1e6) / elapsed));
         }
 
         inChan.close();
