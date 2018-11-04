@@ -2,6 +2,12 @@ language: java
 
 jdk:
   - oraclejdk8
+  - oraclejdk9
+  - openjdk8
+
+os:
+- linux
+- osx
 
 before_install:
   - chmod +x gradlew
@@ -17,3 +23,8 @@ cache:
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+branches:
+  except:
+  - gh-pages
+  - docs
