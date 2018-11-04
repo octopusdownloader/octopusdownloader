@@ -24,8 +24,8 @@
 
 package com.octopus.core.http;
 
-public class RedirectException extends Exception {
-    public RedirectException(String message) {
+public class HTTPException extends Exception {
+    public HTTPException(String message) {
         super(message);
     }
 }

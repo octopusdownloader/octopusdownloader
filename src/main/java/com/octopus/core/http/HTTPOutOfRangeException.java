@@ -24,8 +24,8 @@
 
 package com.octopus.core.http;
 
-public class RedirectException extends Exception {
-    public RedirectException(String message) {
+public class HTTPOutOfRangeException extends Exception {
+    public HTTPOutOfRangeException(String message) {
         super(message);
     }
 }
