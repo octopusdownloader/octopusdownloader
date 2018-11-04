@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.octopus.core;
+package com.octopus.core.http;
 
-public interface Downloadable {
-    void download() throws Exception;
-
-    long receivedBytes();
+public class HTTPException extends Exception {
+    public HTTPException(String message) {
+        super(message);
+    }
 }
