@@ -24,13 +24,7 @@
 
 package com.octopus.core.http;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.Header;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
 
 import java.net.Proxy;
 import java.net.URL;
@@ -38,61 +32,6 @@ import java.net.URL;
 import static org.junit.Assert.*;
 
 public class HTTPInspectorTest {
-    private ClientAndServer mockServer;
-
-    @Before
-    public void startMockServer() {
-        mockServer = ClientAndServer.startClientAndServer(7088);
-
-        mockServer.when(
-                HttpRequest
-                        .request()
-                        .withMethod("GET")
-                        .withPath("/path/to/file.txt")
-
-        ).respond(
-                HttpResponse
-                        .response()
-                        .withStatusCode(200)
-                        .withHeaders(
-                                Header.header("Content-Length", 2),
-                                Header.header("Accept-Ranges", "bytes")
-                        )
-                        .withBody("OK")
-        );
-
-        mockServer.when(
-                HttpRequest
-                        .request()
-                        .withMethod("GET")
-                        .withPath("/redirect/path/to/file")
-
-        ).respond(
-                HttpResponse
-                        .response()
-                        .withStatusCode(301)
-                        .withHeader("Location", "http://localhost:7088/path/to/file1")
-        );
-
-        mockServer.when(
-                HttpRequest
-                        .request()
-                        .withMethod("GET")
-                        .withPath("/path/to/file1")
-
-        ).respond(
-                HttpResponse
-                        .response()
-                        .withStatusCode(301)
-                        .withHeader("Location", "http://localhost:7088/path/to/file.txt")
-        );
-    }
-
-    @After
-    public void stopMockServer() {
-        mockServer.stop();
-    }
-
     @Test
     public void shouldFindURLWhenNotRedirect() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(

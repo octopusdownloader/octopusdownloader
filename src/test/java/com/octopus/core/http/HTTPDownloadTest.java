@@ -38,4 +38,9 @@ public class HTTPDownloadTest {
         HTTPDownload download = new HTTPDownload(new URL("http://localhost/path/to/file"), Paths.get("somefile.txt"), 400, 0, 0);
         assertEquals(download.getRange(), "bytes=0-");
     }
+
+    @Test
+    public void downloadTest() {
+
+    }
 }
