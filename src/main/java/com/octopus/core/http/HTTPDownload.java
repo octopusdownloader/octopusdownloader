@@ -26,9 +26,15 @@ package com.octopus.core.http;
 
 import com.octopus.core.Downloadable;
 
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 public class HTTPDownload implements Downloadable {
     private URL url;
@@ -60,7 +66,7 @@ public class HTTPDownload implements Downloadable {
 
             case 200:
             case 206:
-                startDownload();
+                startDownload(urlConnection.getInputStream());
                 break;
 
             default:
@@ -68,8 +74,28 @@ public class HTTPDownload implements Downloadable {
         }
     }
 
-    private void startDownload() {
+    void startDownload(InputStream inputStream) throws Exception {
+        ReadableByteChannel inChan = Channels.newChannel(inputStream);
+        FileChannel outChan = FileChannel.open(file,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND,
+                StandardOpenOption.WRITE
+        );
 
+        long startTime = System.nanoTime();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(10240);
+        while (inChan.read(byteBuffer) != -1) {
+            byteBuffer.flip();
+            int n = outChan.write(byteBuffer);
+            byteBuffer.rewind();
+            double elapsed = (System.nanoTime() - startTime) / 1e9;
+            System.out.println("Transferred = " + n + "bytes Transfer rate = " + (double) n / elapsed);
+            receivedBytes += n;
+        }
+
+        inChan.close();
+        outChan.close();
+        byteBuffer.clear();
     }
 
     @Override
