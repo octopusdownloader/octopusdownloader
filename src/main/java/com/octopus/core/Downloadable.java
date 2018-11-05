@@ -22,10 +22,19 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package com.octopus.core;
 
-public class RedirectException extends Exception {
-    public RedirectException(String message) {
-        super(message);
-    }
+public interface Downloadable {
+    /**
+     * Download a file from any service
+     *
+     * @throws Exception
+     */
+    void download() throws Exception;
+
+    /**
+     * Returns the total bytes received for download
+     * @return Total bytes transferred
+     */
+    long receivedBytes();
 }

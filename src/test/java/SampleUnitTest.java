@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+import org.junit.Test;
 
-public class RedirectException extends Exception {
-    public RedirectException(String message) {
-        super(message);
+import static org.junit.Assert.assertTrue;
+
+public class SampleUnitTest {
+    @Test public void SomeMethod() {
+        assertTrue("Sample test passing", 1 == 1);
     }
 }
