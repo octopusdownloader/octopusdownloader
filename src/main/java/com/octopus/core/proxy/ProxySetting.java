@@ -24,9 +24,37 @@
 
 package com.octopus.core.proxy;
 
-public interface ProxySetting {
+public class ProxySetting {
 
-    public void setProxy(String host, String port , int proxyType);
+    /**
+     *
+     * @param host = proxy host address
+     * @param port = proxy port number
+     * @param proxyType = type of proxy ; 1= http prox , other = socket proxy
+     */
+    public static void setProxy(String host, String port , int proxyType) {
+        //http proxy => proxyType == 1
+        if(proxyType == 1) {
+            System.setProperty("http.proxyHost", host);
+            System.setProperty("http.proxyPort", port);
+            System.setProperty("https.proxyHost", host);
+            System.setProperty("https.proxyPort", port);
+        }
+        // socket proxy
+        else {
+            System.setProperty("socksProxyHost", host);
+            System.setProperty("socksProxyPort", port);
+        }
 
-    public void unSetProxy();
+    }
+
+
+    public static void unSetProxy() {
+        System.clearProperty("http.proxyHost");
+        System.clearProperty("http.proxyPort");
+        System.clearProperty("https.proxyHost");
+        System.clearProperty("https.proxyPort");
+        System.clearProperty("socksProxyHost");
+        System.clearProperty("socksProxyPort");
+    }
 }

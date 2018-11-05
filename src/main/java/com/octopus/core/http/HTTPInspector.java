@@ -9,7 +9,7 @@ import java.util.Map;
 public class HTTPInspector {
     private URL url;
     private URL finalURL;
-    private Proxy proxy;
+    private Proxy proxy; //removed assigned system proxy
     private int timeout;
     private boolean isAcceptingRanges = false;
     private long contentLength;
