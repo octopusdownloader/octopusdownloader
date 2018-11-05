@@ -30,26 +30,24 @@ public class ProxySetting {
      *
      * @param host = proxy host address
      * @param port = proxy port number
-     * @param proxyType = type of proxy ; 1= http prox , other = socket proxy
+     *
      */
-    public static void setProxy(String host, String port , int proxyType) {
-        //http proxy => proxyType == 1
-        if(proxyType == 1) {
-            System.setProperty("http.proxyHost", host);
-            System.setProperty("http.proxyPort", port);
-            System.setProperty("https.proxyHost", host);
-            System.setProperty("https.proxyPort", port);
-        }
-        // socket proxy
-        else {
-            System.setProperty("socksProxyHost", host);
-            System.setProperty("socksProxyPort", port);
-        }
+    public static void setHttpProxy(String host, String port) {
 
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("https.proxyPort", port);
+    }
+
+    public static void setSocketProxy(String host, String port) {
+        // socket proxy
+        System.setProperty("socksProxyHost", host);
+        System.setProperty("socksProxyPort", port);
     }
 
 
-    public static void unSetProxy() {
+    public static void unsetProxy() {
         System.clearProperty("http.proxyHost");
         System.clearProperty("http.proxyPort");
         System.clearProperty("https.proxyHost");
