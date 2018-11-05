@@ -23,7 +23,7 @@ cache:
 
 script:
 - ./gradlew assemble
-- ./gradlew clean check -Dmockserver.logLevel=OFF
+- ./gradlew clean check -Pmockserver.logLevel=OFF
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)

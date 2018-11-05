@@ -5,7 +5,7 @@ build_script:
 - gradlew.bat assemble --info --no-daemon
 
 test_script:
-- gradlew.bat check --info --no-daemon -Dmockserver.logLevel=OFF
+- gradlew.bat check --info --no-daemon -Pmockserver.logLevel=OFF
 
 branches:
   only:

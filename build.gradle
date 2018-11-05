@@ -67,6 +67,10 @@ test{
             include '**/*UnitTest.class'
         }
     }
+
+    options {
+        systemProperties(System.getProperties())
+    }
 }
 
 subprojects {
