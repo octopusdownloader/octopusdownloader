@@ -2,10 +2,10 @@ build:
   verbosity: detailed
 
 build_script:
-- gradlew.bat assemble --info --no-daemon
+- gradlew.bat assemble
 
 test_script:
-- gradlew.bat check --info --no-daemon -Pmockserver.logLevel=OFF
+- gradlew.bat check -Pmockserver.logLevel=OFF
 
 branches:
   only:
