@@ -8,9 +8,9 @@ test_script:
 - gradlew.bat check -Pmockserver.logLevel=OFF
 
 branches:
-  only:
-  - master
-  - development
+  except:
+  - docs
+  - gh-pages
 
 cache:
 - C:\Users\appveyor\.gradle
