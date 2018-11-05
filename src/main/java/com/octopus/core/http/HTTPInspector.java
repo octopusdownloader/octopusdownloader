@@ -33,7 +33,6 @@ import java.util.Map;
 public class HTTPInspector {
     private URL url;
     private URL finalURL;
-    private Proxy proxy;
     private int timeout;
     private boolean isAcceptingRanges = false;
     private long contentLength;
@@ -48,13 +47,11 @@ public class HTTPInspector {
      * HTTPInspector will inspect a given URL, redirect if necessary
      *
      * @param url          The url to inspect
-     * @param proxy        Proxy settings, by default NO_PROXY
      * @param timeout      Timeout in ms
      * @param maxRedirects Maximum number of redirects for inspect, throws RedirectLimitException
      */
-    public HTTPInspector(URL url, Proxy proxy, int timeout, int maxRedirects) {
+    public HTTPInspector(URL url, int timeout, int maxRedirects) {
         this.url = url;
-        this.proxy = proxy;
         this.timeout = timeout;
         this.maxRedirects = maxRedirects;
     }
@@ -66,7 +63,7 @@ public class HTTPInspector {
      */
     public void inspect() throws Exception {
         finalURL = findRedirectedFinalURL(url, maxRedirects);
-        HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection(proxy);
+        HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection();
         urlConnection.setRequestProperty("User-Agent", "OctopusDM");
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
@@ -87,7 +84,7 @@ public class HTTPInspector {
             throw new RedirectLimitException(maxRedirects);
         }
 
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection(proxy);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestProperty("User-Agent", "OctopusDM");
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
@@ -133,10 +130,6 @@ public class HTTPInspector {
 
     public int getResponseCode() {
         return responseCode;
-    }
-
-    public Proxy getProxy() {
-        return proxy;
     }
 
     public int getTimeout() {

@@ -54,7 +54,6 @@ public class HTTPDownloadTest {
     public void shouldDownloadFullTest() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(
                 new URL("http://localhost:7088/data/image.jpg"),
-                Proxy.NO_PROXY,
                 5000,
                 5
         );

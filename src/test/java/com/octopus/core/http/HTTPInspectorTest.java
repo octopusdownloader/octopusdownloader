@@ -36,7 +36,6 @@ public class HTTPInspectorTest {
     public void shouldFindURLWhenNotRedirect() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(
                 new URL("http://localhost:7088/path/to/file.txt"),
-                Proxy.NO_PROXY,
                 5000,
                 5);
 
@@ -49,7 +48,6 @@ public class HTTPInspectorTest {
     public void shouldFindURLWhenRedirect() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(
                 new URL("http://localhost:7088/redirect/path/to/file"),
-                Proxy.NO_PROXY,
                 5000,
                 5);
 
@@ -62,7 +60,6 @@ public class HTTPInspectorTest {
     public void shouldNotFindURLWhenRedirectLimitExceeded() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(
                 new URL("http://localhost:7088/redirect/path/to/file"),
-                Proxy.NO_PROXY,
                 5000,
                 5);
 
@@ -75,7 +72,6 @@ public class HTTPInspectorTest {
     public void shouldRetrieveFields() throws Exception {
         HTTPInspector httpInspector = new HTTPInspector(
                 new URL("http://localhost:7088/redirect/path/to/file"),
-                Proxy.NO_PROXY,
                 5000,
                 5);
 
@@ -90,7 +86,6 @@ public class HTTPInspectorTest {
         assertEquals("http://localhost:7088/redirect/path/to/file", httpInspector.getOriginalUrl().toString());
         assertEquals("http://localhost:7088/path/to/file.txt", httpInspector.getFinalURL().toString());
         assertEquals("file.txt", httpInspector.getFileName());
-        assertEquals(Proxy.NO_PROXY, httpInspector.getProxy());
         assertEquals(5, httpInspector.getMaxRedirects());
         assertEquals(5000, httpInspector.getTimeout());
     }
