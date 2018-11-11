@@ -20,7 +20,7 @@
                <children>
                   <ImageView fitHeight="22.0" fitWidth="599.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../../octopusdownloader-master/src/main/resources/images/1125156.png" />
+                        <Image url="@../../octopusdownloader-master/src/main/resources/images/octopus.png" />
                      </image>
                   </ImageView>
                   <Label text="OCTOPUS DOWNLOADER" HBox.hgrow="ALWAYS">
@@ -80,7 +80,7 @@
                      <graphic>
                         <ImageView fitHeight="15.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../octopusdownloader-master/src/main/resources/images/kisspng-computer-icons-youtube-play-button-clip-art-icon-png-play-button-5ab1113388a855.8771330715215537155598.jpg" />
+                              <Image url="@../../octopusdownloader-master/src/main/resources/images/play.jpg/>
                            </image>
                         </ImageView>
                      </graphic>
@@ -92,7 +92,7 @@
                      <graphic>
                         <ImageView fitHeight="21.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../octopusdownloader-master/src/main/resources/images/pause-512.png" />
+                              <Image url="@../../octopusdownloader-master/src/main/resources/images/pause.png" />
                            </image>
                         </ImageView>
                      </graphic>
