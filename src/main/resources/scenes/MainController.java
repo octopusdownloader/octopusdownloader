@@ -7,16 +7,18 @@ import javafx.stage.Stage;
 
 public class MainController {
 
-    public void newDownload(){
+
+    public void newDownloadDialog() {
         try{
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewDownload.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("new-download-dialog.fxml"));
             Parent root1 = (Parent) fxmlLoader.load();
             Stage stage = new Stage();
             stage.setTitle("New Download");
             stage.setScene(new Scene(root1));
             stage.show();
-        }catch (Exception e){
+            }catch (Exception e){
             System.out.println("can't load the window");
-        }
+            }
+
     }
 }

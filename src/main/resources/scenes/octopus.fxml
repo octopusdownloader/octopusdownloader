@@ -68,7 +68,7 @@
             <HBox prefHeight="66.0" prefWidth="600.0">
                <children>
                   <Region prefHeight="200.0" prefWidth="200.0" />
-                  <Button mnemonicParsing="false" onAction="#newDownload" text="+" textAlignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#newDownloadDialog" text="+" textAlignment="CENTER">
                      <HBox.margin>
                         <Insets right="8.0" />
                      </HBox.margin>
