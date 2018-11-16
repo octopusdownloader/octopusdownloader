@@ -1,32 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.effect.Glow?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.control.Label?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainController">
    <top>
-      <CheckBox mnemonicParsing="false" text="CheckBox" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="71.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ImageView fitHeight="22.0" fitWidth="599.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../octopusdownloader-master/src/main/resources/images/octopus.png" />
+                     </image>
+                  </ImageView>
+                  <Label text="OCTOPUS DOWNLOADER" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="Gabriola" size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <MenuBar prefHeight="14.0" prefWidth="600.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Category">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Download">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+            <HBox prefHeight="66.0" prefWidth="600.0">
+               <children>
+                  <Region prefHeight="200.0" prefWidth="200.0" />
+                  <Button mnemonicParsing="false" onAction="#newDownloadDialog" text="+" textAlignment="CENTER">
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="24.0" prefWidth="24.0">
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../octopusdownloader-master/src/main/resources/images/play.jpg/>
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="29.0" prefWidth="29.0">
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="21.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../octopusdownloader-master/src/main/resources/images/pause.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" text="*">
+                     <HBox.margin>
+                        <Insets right="8.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
    </top>
    <left>
-      <Button mnemonicParsing="false" text="Button" underline="true" BorderPane.alignment="CENTER">
-         <textFill>
-            <LinearGradient>
-               <stops>
-                  <Stop color="#6bcd3e" />
-                  <Stop color="WHITE" offset="1.0" />
-               </stops>
-            </LinearGradient>
-         </textFill>
-         <effect>
-            <Glow />
-         </effect>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
+      <TreeView prefHeight="296.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </left>
+   <center>
+      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="105.0" text="Name" />
+          <TableColumn prefWidth="71.0" text="Complete" />
+            <TableColumn prefWidth="83.0" text="Size" />
+            <TableColumn prefWidth="41.0" text="\%" />
+            <TableColumn prefWidth="75.0" text="Elapsed" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox prefHeight="63.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>
