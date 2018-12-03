@@ -29,29 +29,30 @@ import com.octopus.core.Downloadable;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 public class HTTPDownload implements Downloadable {
     private URL url;
-    private Path file;
     private long from;
     private long to;
-    private long receivedBytes;
 
-    public HTTPDownload(URL url, Path file, long from, long to) {
+    public HTTPDownload(URL url, long from, long to) {
         this.url = url;
-        this.file = file;
         this.from = from;
         this.to = to;
     }
 
+    String getRange() {
+        return "bytes=" + from + "-" + (to == 0 ? "" : to);
+    }
+
+    /**
+     * Returns the input stream for a file
+     *
+     * @return InputStream
+     * @throws Exception HTTP Exception
+     */
     @Override
-    public void download() throws Exception {
+    public InputStream getFileStream() throws Exception {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.setRequestProperty("Range", getRange());
@@ -59,50 +60,12 @@ public class HTTPDownload implements Downloadable {
         int respCode = urlConnection.getResponseCode();
 
         switch (respCode) {
-            case 416:
-                throw new HTTPOutOfRangeException("Out of range");
-
             case 200:
             case 206:
-                startDownload(urlConnection.getInputStream());
-                break;
+                return urlConnection.getInputStream();
 
             default:
                 throw new HTTPException("HTTP Error " + respCode);
         }
-    }
-
-    private void startDownload(InputStream inputStream) throws Exception {
-        ReadableByteChannel inChan = Channels.newChannel(inputStream);
-        FileChannel outChan = FileChannel.open(file,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.APPEND,
-                StandardOpenOption.WRITE
-        );
-
-        long startTime = System.nanoTime();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(10240);
-        while (inChan.read(byteBuffer) != -1) {
-            byteBuffer.flip();
-            int n = outChan.write(byteBuffer);
-            byteBuffer.rewind();
-            receivedBytes += n;
-            double elapsed = (System.nanoTime() - startTime);
-            startTime = System.nanoTime();
-            System.out.println("Elapsed = " + elapsed + " Transferred = " + n + " bytes Transfer rate = " + ((n / 1e6) / elapsed));
-        }
-
-        inChan.close();
-        outChan.close();
-        byteBuffer.clear();
-    }
-
-    @Override
-    public long receivedBytes() {
-        return receivedBytes;
-    }
-
-    String getRange() {
-        return "bytes=" + from + "-" + (to == 0 ? "" : to);
     }
 }

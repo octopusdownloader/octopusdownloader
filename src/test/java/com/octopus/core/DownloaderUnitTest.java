@@ -24,13 +24,30 @@
 
 package com.octopus.core;
 
-import java.io.InputStream;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-public interface Downloadable {
-    /**
-     * Returns the input stream for a file
-     * @return InputStream
-     * @throws Exception Exception about HTTP
-     */
-    InputStream getFileStream() throws Exception;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class DownloaderUnitTest {
+    final String text = "non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor";
+
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
+
+    @Test
+    public void shouldDownloadFromAnyStream() throws Exception {
+        Downloader downloader = new Downloader(() -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"));
+
+        downloader.download();
+        File file = new File(tmpFolder.getRoot().getCanonicalPath(), "test");
+        assertTrue("Check file exists", file.exists());
+        assertEquals("Is file size equal", text.length(), file.length());
+    }
 }

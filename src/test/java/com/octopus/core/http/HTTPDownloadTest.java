@@ -24,12 +24,12 @@
 
 package com.octopus.core.http;
 
+import com.octopus.core.Downloader;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.net.Proxy;
 import java.net.URL;
 import java.nio.file.Paths;
 
@@ -44,7 +44,6 @@ public class HTTPDownloadTest {
     public void shouldGetRange() throws Exception {
         HTTPDownload download = new HTTPDownload(
                 new URL("http://localhost/path/to/file"),
-                Paths.get("somefile.txt"),
                 0,
                 0);
         assertEquals(download.getRange(), "bytes=0-");
@@ -59,13 +58,13 @@ public class HTTPDownloadTest {
         );
         httpInspector.inspect();
 
-        HTTPDownload download = new HTTPDownload(
+        HTTPDownload httpDownload = new HTTPDownload(
                 new URL("http://localhost:7088/data/image.jpg"),
-                Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg"),
                 0,
                 0);
 
-        download.download();
+        Downloader downloader = new Downloader(httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg"));
+        downloader.download();
 
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg");
         assertTrue("Check file exists", file.exists());
@@ -74,16 +73,17 @@ public class HTTPDownloadTest {
 
     @Test
     public void shouldDownloadPartialTest() throws Exception {
-        HTTPDownload download = new HTTPDownload(
+        HTTPDownload httpDownload = new HTTPDownload(
                 new URL("http://localhost:7088/data/partial/image.jpg"),
-                Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.part"),
+
                 0,
                 1023);
 
-        download.download();
+        Downloader downloader = new Downloader(httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.part"));
+        downloader.download();
 
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "sample.part");
         assertTrue("Check file exists", file.exists());
-        assertEquals("Is file size equal", download.receivedBytes(), file.length());
+        assertEquals("Is file size equal", 1024, file.length());
     }
 }
