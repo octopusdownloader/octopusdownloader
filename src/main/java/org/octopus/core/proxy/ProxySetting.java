@@ -22,10 +22,37 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.proxy;
 
-public class HTTPException extends Exception {
-    public HTTPException(String message) {
-        super(message);
+public class ProxySetting {
+
+    /**
+     *
+     * @param host = proxy host address
+     * @param port = proxy port number
+     *
+     */
+    public static void setHttpProxy(String host, String port) {
+
+        System.setProperty("http.proxyHost", host);
+        System.setProperty("http.proxyPort", port);
+        System.setProperty("https.proxyHost", host);
+        System.setProperty("https.proxyPort", port);
+    }
+
+    public static void setSocketProxy(String host, String port) {
+        // socket proxy
+        System.setProperty("socksProxyHost", host);
+        System.setProperty("socksProxyPort", port);
+    }
+
+
+    public static void unsetProxy() {
+        System.clearProperty("http.proxyHost");
+        System.clearProperty("http.proxyPort");
+        System.clearProperty("https.proxyHost");
+        System.clearProperty("https.proxyPort");
+        System.clearProperty("socksProxyHost");
+        System.clearProperty("socksProxyPort");
     }
 }

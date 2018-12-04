@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
 public class HTTPOutOfRangeException extends Exception {
     public HTTPOutOfRangeException(String message) {

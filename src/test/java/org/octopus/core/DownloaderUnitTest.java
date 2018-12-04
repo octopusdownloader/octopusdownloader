@@ -22,32 +22,32 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
-import java.net.URL;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-public class HTTPUtilsUnitTest {
-    // Tests for extractFileNameFromURL
-    @Test
-    public void shouldExtractFileNameFromURLWithNoQuery() throws Exception {
-        URL url = new URL("https://somehost:7070/path/to/file.zip");
-        assertEquals("file.zip", HTTPUtils.extractFileNameFromURL(url));
-    }
+public class DownloaderUnitTest {
+    final String text = "non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor";
 
-    @Test
-    public void shouldExtractFileNameFromURLWithQuery() throws Exception {
-        URL url = new URL("https://somehost:7070/path/to/file.zip?abc=123&def=34&update=true");
-        assertEquals("file.zip", HTTPUtils.extractFileNameFromURL(url));
-    }
+    @Rule
+    public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Test
-    public void shouldExtractFileNameFromURLWithoutExtension() throws Exception {
-        URL url = new URL("https://somehost:7070/path/to/file?abc=123&er=34");
-        assertEquals("file", HTTPUtils.extractFileNameFromURL(url));
+    public void shouldDownloadFromAnyStream() throws Exception {
+        Downloader downloader = new Downloader(() -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"));
+
+        downloader.download();
+        File file = new File(tmpFolder.getRoot().getCanonicalPath(), "test");
+        assertTrue("Check file exists", file.exists());
+        assertEquals("Is file size equal", text.length(), file.length());
     }
-    //////////////////////////
 }

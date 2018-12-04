@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
-public class RedirectLimitException extends Exception {
-    public RedirectLimitException(int exceptions) {
-        super(System.out.printf("exceeded maximum %d redirects", exceptions).toString());
+public class RedirectException extends Exception {
+    public RedirectException(String message) {
+        super(message);
     }
 }

@@ -22,10 +22,14 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.settings;
 
-public class RedirectException extends Exception {
-    public RedirectException(String message) {
-        super(message);
+public class OctopusSettings {
+    public static String getUserAgent() {
+        return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+    }
+
+    public static int getDownloadBufferSize() {
+        return 10240;
     }
 }

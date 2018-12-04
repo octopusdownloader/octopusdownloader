@@ -22,37 +22,10 @@
  * SOFTWARE.
  */
 
-package com.octopus.core;
+package org.octopus.core.http;
 
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-
-public class Downloader {
-    private Downloadable downloadable;
-    private Path file;
-
-    public Downloader(Downloadable downloadable, Path file) {
-        this.downloadable = downloadable;
-        this.file = file;
-    }
-
-    public void download() throws Exception {
-        try (
-                ReadableByteChannel inChan = Channels.newChannel(downloadable.getFileStream());
-                FileChannel outChan = FileChannel.open(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE)
-        ) {
-            // TODO Replace this with global setting for buffer size
-            ByteBuffer byteBuffer = ByteBuffer.allocate(10240);
-
-            while (inChan.read(byteBuffer) != -1) {
-                byteBuffer.flip();
-                outChan.write(byteBuffer);
-                byteBuffer.rewind();
-            }
-        }
+public class HTTPException extends Exception {
+    public HTTPException(String message) {
+        super(message);
     }
 }

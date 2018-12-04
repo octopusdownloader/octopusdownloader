@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018.
+ * Copyright (c) 2018 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,37 +22,32 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.proxy;
+package org.octopus.core.http;
 
-public class ProxySetting {
+import org.junit.Test;
 
-    /**
-     *
-     * @param host = proxy host address
-     * @param port = proxy port number
-     *
-     */
-    public static void setHttpProxy(String host, String port) {
+import java.net.URL;
 
-        System.setProperty("http.proxyHost", host);
-        System.setProperty("http.proxyPort", port);
-        System.setProperty("https.proxyHost", host);
-        System.setProperty("https.proxyPort", port);
+import static org.junit.Assert.assertEquals;
+
+public class HTTPUtilsUnitTest {
+    // Tests for extractFileNameFromURL
+    @Test
+    public void shouldExtractFileNameFromURLWithNoQuery() throws Exception {
+        URL url = new URL("https://somehost:7070/path/to/file.zip");
+        assertEquals("file.zip", HTTPUtils.extractFileNameFromURL(url));
     }
 
-    public static void setSocketProxy(String host, String port) {
-        // socket proxy
-        System.setProperty("socksProxyHost", host);
-        System.setProperty("socksProxyPort", port);
+    @Test
+    public void shouldExtractFileNameFromURLWithQuery() throws Exception {
+        URL url = new URL("https://somehost:7070/path/to/file.zip?abc=123&def=34&update=true");
+        assertEquals("file.zip", HTTPUtils.extractFileNameFromURL(url));
     }
 
-
-    public static void unsetProxy() {
-        System.clearProperty("http.proxyHost");
-        System.clearProperty("http.proxyPort");
-        System.clearProperty("https.proxyHost");
-        System.clearProperty("https.proxyPort");
-        System.clearProperty("socksProxyHost");
-        System.clearProperty("socksProxyPort");
+    @Test
+    public void shouldExtractFileNameFromURLWithoutExtension() throws Exception {
+        URL url = new URL("https://somehost:7070/path/to/file?abc=123&er=34");
+        assertEquals("file", HTTPUtils.extractFileNameFromURL(url));
     }
+    //////////////////////////
 }
