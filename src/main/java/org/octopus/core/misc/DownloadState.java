@@ -22,34 +22,12 @@
  * SOFTWARE.
  */
 
-package org.octopus.core;
+package org.octopus.core.misc;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.octopus.core.misc.ProgressReporter;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.file.Paths;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class DownloaderUnitTest {
-    final String text = "non diam phasellus vestibulum lorem sed risus ultricies tristique nulla aliquet enim tortor at auctor";
-
-    @Rule
-    public TemporaryFolder tmpFolder = new TemporaryFolder();
-
-    @Test
-    public void shouldDownloadFromAnyStream() throws Exception {
-        ProgressReporter reporter = new ProgressReporter();
-        Downloader downloader = new Downloader(1, () -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"), reporter);
-
-        downloader.download();
-        File file = new File(tmpFolder.getRoot().getCanonicalPath(), "test");
-        assertTrue("Check file exists", file.exists());
-        assertEquals("Is file size equal", text.length(), file.length());
-    }
+public enum DownloadState {
+    UNKNOWN,
+    IN_PROGRESS,
+    PAUSED,
+    COMPLETED,
+    FAILED,
 }

@@ -24,6 +24,7 @@
 
 package org.octopus.core;
 
+import org.octopus.core.misc.ProgressReporter;
 import org.octopus.settings.OctopusSettings;
 
 import java.nio.ByteBuffer;
@@ -34,12 +35,17 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class Downloader {
+    private int id;
     private Downloadable downloadable;
     private Path file;
+    private long bytesReceived;
+    private ProgressReporter progressReporter;
 
-    public Downloader(Downloadable downloadable, Path file) {
+    public Downloader(int id, Downloadable downloadable, Path file, ProgressReporter progressReporter) {
+        this.id = id;
         this.downloadable = downloadable;
         this.file = file;
+        this.progressReporter = progressReporter;
     }
 
     public void download() throws Exception {
@@ -49,12 +55,18 @@ public class Downloader {
         ) {
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
-
+            int transferredBytes;
             while (inChan.read(byteBuffer) != -1) {
                 byteBuffer.flip();
-                outChan.write(byteBuffer);
+                transferredBytes = outChan.write(byteBuffer);
+                bytesReceived += transferredBytes;
+                progressReporter.accumulateReceivedBytes(transferredBytes);
                 byteBuffer.rewind();
             }
         }
+    }
+
+    public long getBytesReceived() {
+        return bytesReceived;
     }
 }
