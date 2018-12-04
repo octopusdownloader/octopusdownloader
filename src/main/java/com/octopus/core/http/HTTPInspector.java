@@ -24,6 +24,8 @@
 
 package com.octopus.core.http;
 
+import com.octopus.settings.OctopusSettings;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -63,7 +65,7 @@ public class HTTPInspector {
     public void inspect() throws Exception {
         finalURL = findRedirectedFinalURL(url, maxRedirects);
         HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection();
-        urlConnection.setRequestProperty("User-Agent", "OctopusDM");
+        urlConnection.setRequestProperty("User-Agent", OctopusSettings.getUserAgent());
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.connect();
@@ -84,7 +86,7 @@ public class HTTPInspector {
         }
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestProperty("User-Agent", "OctopusDM");
+        urlConnection.setRequestProperty("User-Agent", OctopusSettings.getUserAgent());
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.connect();

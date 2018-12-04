@@ -24,6 +24,8 @@
 
 package com.octopus.core;
 
+import com.octopus.settings.OctopusSettings;
+
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -46,7 +48,7 @@ public class Downloader {
                 FileChannel outChan = FileChannel.open(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE)
         ) {
             // TODO Replace this with global setting for buffer size
-            ByteBuffer byteBuffer = ByteBuffer.allocate(10240);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
 
             while (inChan.read(byteBuffer) != -1) {
                 byteBuffer.flip();
