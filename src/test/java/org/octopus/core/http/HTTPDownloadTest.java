@@ -28,6 +28,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.octopus.core.Downloader;
+import org.octopus.core.misc.ProgressReporter;
 
 import java.io.File;
 import java.net.URL;
@@ -63,7 +64,8 @@ public class HTTPDownloadTest {
                 0,
                 0);
 
-        Downloader downloader = new Downloader(httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg"));
+        ProgressReporter reporter = new ProgressReporter();
+        Downloader downloader = new Downloader(1, httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg"), reporter);
         downloader.download();
 
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "sample.jpg");
@@ -79,7 +81,8 @@ public class HTTPDownloadTest {
                 0,
                 1023);
 
-        Downloader downloader = new Downloader(httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.part"));
+        ProgressReporter reporter = new ProgressReporter();
+        Downloader downloader = new Downloader(1, httpDownload, Paths.get(tmpFolder.getRoot().getCanonicalPath(), "sample.part"), reporter);
         downloader.download();
 
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "sample.part");

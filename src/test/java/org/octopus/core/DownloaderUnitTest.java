@@ -27,6 +27,7 @@ package org.octopus.core;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.octopus.core.misc.ProgressReporter;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -43,7 +44,8 @@ public class DownloaderUnitTest {
 
     @Test
     public void shouldDownloadFromAnyStream() throws Exception {
-        Downloader downloader = new Downloader(() -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"));
+        ProgressReporter reporter = new ProgressReporter();
+        Downloader downloader = new Downloader(1, () -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"), reporter);
 
         downloader.download();
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "test");
