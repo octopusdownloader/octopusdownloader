@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
-import com.octopus.settings.OctopusSettings;
+import org.octopus.settings.OctopusSettings;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

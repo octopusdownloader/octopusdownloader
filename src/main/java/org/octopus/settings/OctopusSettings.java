@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.octopus.settings;
+package org.octopus.settings;
 
 public class OctopusSettings {
     public static String getUserAgent() {

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

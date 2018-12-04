@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
 public class RedirectException extends Exception {
     public RedirectException(String message) {

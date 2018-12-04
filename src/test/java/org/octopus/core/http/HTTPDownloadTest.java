@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
-import com.octopus.core.Downloader;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.octopus.core.Downloader;
 
 import java.io.File;
 import java.net.URL;

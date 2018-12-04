@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.octopus.core;
+package org.octopus.core;
 
-import com.octopus.settings.OctopusSettings;
+import org.octopus.settings.OctopusSettings;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;

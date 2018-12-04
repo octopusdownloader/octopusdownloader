@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-package com.octopus.core.http;
+package org.octopus.core.http;
 
 import org.junit.Test;
 
-import java.net.Proxy;
 import java.net.URL;
 
 import static org.junit.Assert.*;
