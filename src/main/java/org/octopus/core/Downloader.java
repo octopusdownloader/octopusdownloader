@@ -52,7 +52,12 @@ public class Downloader {
     public void download() throws Exception {
         try (
                 ReadableByteChannel inChan = Channels.newChannel(downloadable.getFileStream());
-                FileChannel outChan = FileChannel.open(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE)
+                FileChannel outChan = FileChannel.open(
+                        file,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.APPEND,
+                        StandardOpenOption.WRITE
+                )
         ) {
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
