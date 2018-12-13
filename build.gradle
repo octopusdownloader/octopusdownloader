@@ -84,7 +84,7 @@ jacocoTestReport {
 
 jfx {
     // minimal requirement for jfxJar-task
-    mainClass = 'com.octopus.Main'
+    mainClass = 'org.octopus.Main'
 
     // minimal requirement for jfxNative-task
     vendor = 'Octopus Org.'
