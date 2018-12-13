@@ -35,10 +35,12 @@ public class ProgressReporter {
     private PropertyChangeSupport propertyChangeSupport;
     private long receivedBytes = 0;
     private HashMap<Integer, DownloadState> downloadStateHashMap;
+    private HashMap<Integer, Long> downloadCompletions;
 
     public ProgressReporter() {
         propertyChangeSupport = new PropertyChangeSupport(this);
         downloadStateHashMap = new HashMap<>();
+        downloadCompletions = new HashMap<>();
     }
 
     public void addPropertyChangeListener(String name, PropertyChangeListener listener) {
@@ -49,7 +51,8 @@ public class ProgressReporter {
         propertyChangeSupport.removePropertyChangeListener(name, listener);
     }
 
-    public void accumulateReceivedBytes(long amount) {
+    public void accumulateReceivedBytes(int id, long amount) {
+        downloadCompletions.put(id, amount);
         propertyChangeSupport.firePropertyChange(OnBytesReceived, this.receivedBytes, this.receivedBytes + amount);
         this.receivedBytes += amount;
     }
@@ -79,5 +82,9 @@ public class ProgressReporter {
 
     public PropertyChangeSupport getPropertyChangeSupport() {
         return propertyChangeSupport;
+    }
+
+    public HashMap<Integer, Long> getDownloadCompletions() {
+        return downloadCompletions;
     }
 }
