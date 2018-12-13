@@ -24,6 +24,7 @@
 
 package org.octopus.core;
 
+import org.octopus.core.misc.DownloadState;
 import org.octopus.core.misc.ProgressReporter;
 import org.octopus.settings.OctopusSettings;
 
@@ -63,6 +64,12 @@ public class Downloader {
                 progressReporter.accumulateReceivedBytes(transferredBytes);
                 byteBuffer.rewind();
             }
+
+            // this one has finished the task
+            progressReporter.updateState(this.id, DownloadState.COMPLETED);
+        } catch (Exception e) {
+            progressReporter.updateState(this.id, DownloadState.FAILED);
+            throw e;
         }
     }
 
