@@ -61,7 +61,7 @@ public class Downloader {
                 byteBuffer.flip();
                 transferredBytes = outChan.write(byteBuffer);
                 bytesReceived += transferredBytes;
-                progressReporter.accumulateReceivedBytes(transferredBytes);
+                progressReporter.accumulateReceivedBytes(id, transferredBytes);
                 byteBuffer.rewind();
             }
 
