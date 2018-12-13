@@ -45,7 +45,11 @@ public class DownloaderUnitTest {
     @Test
     public void shouldDownloadFromAnyStream() throws Exception {
         ProgressReporter reporter = new ProgressReporter();
-        Downloader downloader = new Downloader(1, () -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(), "test"), reporter);
+        Downloader downloader = new Downloader(
+                1,
+                () -> new ByteArrayInputStream(text.getBytes()), Paths.get(tmpFolder.getRoot().getCanonicalPath(),
+                "test"),
+                reporter);
 
         downloader.download();
         File file = new File(tmpFolder.getRoot().getCanonicalPath(), "test");
