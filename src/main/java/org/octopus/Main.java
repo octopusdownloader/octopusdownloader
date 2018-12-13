@@ -42,7 +42,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/scenes/octopus.fxml"));
         primaryStage.setTitle("Octopus");
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 900, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
