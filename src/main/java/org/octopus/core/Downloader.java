@@ -24,6 +24,7 @@
 
 package org.octopus.core;
 
+import org.octopus.core.misc.DownloadState;
 import org.octopus.core.misc.ProgressReporter;
 import org.octopus.settings.OctopusSettings;
 
@@ -51,7 +52,12 @@ public class Downloader {
     public void download() throws Exception {
         try (
                 ReadableByteChannel inChan = Channels.newChannel(downloadable.getFileStream());
-                FileChannel outChan = FileChannel.open(file, StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE)
+                FileChannel outChan = FileChannel.open(
+                        file,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.APPEND,
+                        StandardOpenOption.WRITE
+                )
         ) {
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
@@ -60,9 +66,15 @@ public class Downloader {
                 byteBuffer.flip();
                 transferredBytes = outChan.write(byteBuffer);
                 bytesReceived += transferredBytes;
-                progressReporter.accumulateReceivedBytes(transferredBytes);
+                progressReporter.accumulateReceivedBytes(id, transferredBytes);
                 byteBuffer.rewind();
             }
+
+            // this one has finished the task
+            progressReporter.updateState(this.id, DownloadState.COMPLETED);
+        } catch (Exception e) {
+            progressReporter.updateState(this.id, DownloadState.FAILED);
+            throw e;
         }
     }
 
