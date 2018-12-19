@@ -28,11 +28,13 @@ import java.nio.file.Path;
 
 public class DownloadInfo {
     private String url;
+    private String filename;
     private Path baseDirectory;
 
-    public DownloadInfo(String url, Path baseDirectory) {
+    public DownloadInfo(String url, Path baseDirectory, String filename) {
         this.url = url;
         this.baseDirectory = baseDirectory;
+        this.filename = filename;
     }
 
     public String getUrl() {
@@ -51,10 +53,19 @@ public class DownloadInfo {
         this.baseDirectory = baseDirectory;
     }
 
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
     @Override
     public String toString() {
         return "DownloadInfo{" +
                 "url='" + url + '\'' +
+                ", filename='" + filename + '\'' +
                 ", baseDirectory=" + baseDirectory +
                 '}';
     }
