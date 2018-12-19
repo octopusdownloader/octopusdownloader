@@ -51,7 +51,7 @@ public class AddNewDownloadController {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         String data = clipboard.getString();
         try {
-            URL tmpUrl = new URL(data);
+            new URL(data);
             addressText.setText(data);
         } catch (MalformedURLException e) {
             // do nothing
@@ -69,10 +69,13 @@ public class AddNewDownloadController {
 
     public void openDirectoryPicker(ActionEvent actionEvent) {
         DirectoryChooser directoryChooser = new DirectoryChooser();
+        File dir = new File(downloadDir.toUri());
+        directoryChooser.setInitialDirectory(dir);
         File selectedDir = directoryChooser.showDialog(root);
 
         if (selectedDir != null) {
             downloadDirectoryText.setText(selectedDir.getAbsolutePath());
+            downloadDir = Paths.get(downloadDirectoryText.getText());
         }
     }
 
