@@ -62,6 +62,17 @@
                 <Insets left="5.0"/>
             </GridPane.margin>
         </Label>
+        <Label text="Name:" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="nameText" promptText="Leave this blank for default name..." GridPane.columnIndex="2"
+                   GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </GridPane.margin>
+        </TextField>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
                 <TextField fx:id="downloadDirectoryText" prefHeight="31.0" prefWidth="440.0">
@@ -69,7 +80,7 @@
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button fx:id="browseButton" mnemonicParsing="false" onAction="#openDirectoryPicker" prefHeight="34.0"
+                <Button mnemonicParsing="false" onAction="#openDirectoryPicker" prefHeight="34.0"
                         prefWidth="154.0" text="Browse...">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -84,17 +95,6 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </GridPane.margin>
         </HBox>
-        <Label text="Name:" GridPane.halignment="LEFT" GridPane.rowIndex="1">
-            <GridPane.margin>
-                <Insets left="5.0"/>
-            </GridPane.margin>
-        </Label>
-        <TextField fx:id="nameText" promptText="Leave this blank for default name..." GridPane.columnIndex="2"
-                   GridPane.halignment="LEFT" GridPane.rowIndex="1">
-            <GridPane.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </GridPane.margin>
-        </TextField>
     </children>
     <padding>
         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
