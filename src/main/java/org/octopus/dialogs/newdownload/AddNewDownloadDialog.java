@@ -58,6 +58,7 @@ public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
             System.exit(1);
         }
 
+        // TODO validation
         setResultConverter(buttonType -> {
             if (buttonType == downloadButtonType) {
                 return new DownloadInfo(controller.getAddress(), controller.getBaseDirectory(), controller.getName());
