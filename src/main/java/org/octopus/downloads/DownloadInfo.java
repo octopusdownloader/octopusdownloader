@@ -24,11 +24,15 @@
 
 package org.octopus.downloads;
 
-public class DownloadInfo {
-    String url;
+import java.nio.file.Path;
 
-    public DownloadInfo(String url) {
+public class DownloadInfo {
+    private String url;
+    private Path baseDirectory;
+
+    public DownloadInfo(String url, Path baseDirectory) {
         this.url = url;
+        this.baseDirectory = baseDirectory;
     }
 
     public String getUrl() {
@@ -37,5 +41,21 @@ public class DownloadInfo {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Path getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory(Path baseDirectory) {
+        this.baseDirectory = baseDirectory;
+    }
+
+    @Override
+    public String toString() {
+        return "DownloadInfo{" +
+                "url='" + url + '\'' +
+                ", baseDirectory=" + baseDirectory +
+                '}';
     }
 }
