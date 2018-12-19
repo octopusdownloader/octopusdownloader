@@ -22,28 +22,24 @@
  * SOFTWARE.
  */
 
-package org.octopus;
+package org.octopus.controller;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
 
-import java.io.IOException;
+public class MainController {
+    public Button addDownloadButton;
 
-public class Main extends Application {
+    @FXML
+    private void initialize() {
 
-    public static void main(String[] args) {
-        launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/scenes/octopus.fxml"));
-        primaryStage.setTitle("Octopus");
-        Scene scene = new Scene(root, 900, 500);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
+        new AddNewDownloadDialog()
+                .showAndWait()
+                .ifPresent(System.out::println);
     }
 }

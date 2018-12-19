@@ -22,28 +22,51 @@
  * SOFTWARE.
  */
 
-package org.octopus;
+package org.octopus.downloads;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import java.nio.file.Path;
 
-import java.io.IOException;
+public class DownloadInfo {
+    private String url;
+    private String filename;
+    private Path baseDirectory;
 
-public class Main extends Application {
+    public DownloadInfo(String url, Path baseDirectory, String filename) {
+        this.url = url;
+        this.baseDirectory = baseDirectory;
+        this.filename = filename;
+    }
 
-    public static void main(String[] args) {
-        launch(args);
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Path getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory(Path baseDirectory) {
+        this.baseDirectory = baseDirectory;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/scenes/octopus.fxml"));
-        primaryStage.setTitle("Octopus");
-        Scene scene = new Scene(root, 900, 500);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    public String toString() {
+        return "DownloadInfo{" +
+                "url='" + url + '\'' +
+                ", filename='" + filename + '\'' +
+                ", baseDirectory=" + baseDirectory +
+                '}';
     }
 }
