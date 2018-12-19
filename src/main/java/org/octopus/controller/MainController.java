@@ -26,14 +26,19 @@ package org.octopus.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
 
 public class MainController {
     public Button addDownloadButton;
+    public TableView tableView;
 
     @FXML
     private void initialize() {
+        tableView.setEditable(false);
+        tableView.setPlaceholder(new Label("Such empty :("));
 
     }
 
