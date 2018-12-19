@@ -27,21 +27,38 @@ package org.octopus.dialogs.newdownload;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.input.Clipboard;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AddNewDownloadController {
     public TextField addressText;
     public TextField downloadDirectoryText;
+    public TextField nameText;
+
     Path downloadDir;
     private Stage root;
 
     @FXML
     public void initialize() {
+        // Get URLs from Clipboard
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        String data = clipboard.getString();
+        try {
+            URL tmpUrl = new URL(data);
+            addressText.setText(data);
+        } catch (MalformedURLException e) {
+            // do nothing
+        }
+
+        // TODO add category picker here
+        // Get default download folder
         downloadDir = Paths.get(System.getProperty("user.home"), "Downloads");
         downloadDirectoryText.setText(downloadDir.toString());
     }
@@ -65,5 +82,9 @@ public class AddNewDownloadController {
 
     public Path getBaseDirectory() {
         return Paths.get(downloadDirectoryText.getText());
+    }
+
+    public String getName() {
+        return nameText.getText();
     }
 }

@@ -60,7 +60,7 @@ public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
 
         setResultConverter(buttonType -> {
             if (buttonType == downloadButtonType) {
-                return new DownloadInfo(controller.getAddress(), controller.getBaseDirectory());
+                return new DownloadInfo(controller.getAddress(), controller.getBaseDirectory(), controller.getName());
             }
 
             return null;
