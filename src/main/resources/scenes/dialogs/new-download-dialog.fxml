@@ -29,21 +29,22 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="103.0" prefWidth="626.0"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="119.0" prefWidth="639.0"
           xmlns="http://javafx.com/javafx/8.0.172-ea"
           fx:controller="org.octopus.dialogs.newdownload.AddNewDownloadController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="0.0" prefWidth="0.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="530.0" minWidth="10.0" prefWidth="530.0"/>
     </columnConstraints>
     <rowConstraints>
+        <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES"/>
         <RowConstraints maxHeight="56.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES"/>
         <RowConstraints maxHeight="65.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <TextField fx:id="addressText" maxWidth="600.0" minWidth="511.0" prefHeight="31.0" prefWidth="511.0"
-                   promptText="Enter the Address" GridPane.columnIndex="2">
+        <TextField fx:id="addressText" prefHeight="31.0" prefWidth="501.0" promptText="Enter the Address"
+                   GridPane.columnIndex="2" GridPane.halignment="LEFT">
             <padding>
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </padding>
@@ -51,9 +52,17 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </GridPane.margin>
         </TextField>
-        <Label prefHeight="21.0" prefWidth="36.0" text="URL:"/>
-        <Label text="Save To:" GridPane.rowIndex="1"/>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <Label prefHeight="21.0" prefWidth="36.0" text="URL:" GridPane.halignment="LEFT">
+            <GridPane.margin>
+                <Insets left="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <Label text="Save To:" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <GridPane.margin>
+                <Insets left="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
                 <TextField fx:id="downloadDirectoryText" prefHeight="31.0" prefWidth="440.0">
                     <HBox.margin>
@@ -75,6 +84,17 @@
                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </GridPane.margin>
         </HBox>
+        <Label text="Name:" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="5.0"/>
+            </GridPane.margin>
+        </Label>
+        <TextField fx:id="nameText" promptText="Leave this blank for default name..." GridPane.columnIndex="2"
+                   GridPane.halignment="LEFT" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </GridPane.margin>
+        </TextField>
     </children>
     <padding>
         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0"/>
