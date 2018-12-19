@@ -28,9 +28,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.octopus.controller.MainController"
-            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0"
-            prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea"
+            fx:controller="org.octopus.controller.MainController">
    <top>
       <VBox prefHeight="82.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -48,29 +48,29 @@
                 </Menu>
                  <Menu mnemonicParsing="false" text="Help">
                     <items>
-                       <MenuItem mnemonicParsing="false" text="About"/>
+                        <MenuItem mnemonicParsing="false" text="About"/>
                     </items>
                  </Menu>
               </menus>
             </MenuBar>
             <HBox prefHeight="116.0" prefWidth="600.0" spacing="5.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="45.0">
+                   <Button fx:id="addDownloadButton" mnemonicParsing="false" onMouseClicked="#openAddNewDownloadDialog"
+                           prefHeight="42.0" prefWidth="45.0">
                      <graphic>
-                        <ImageView fx:id="addDownloadButton" fitHeight="48.0" fitWidth="48.0"
-                                   onMouseClicked="#openAddDownloadDialog" pickOnBounds="true" preserveRatio="true">
+                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-plus-50.png"/>
+                               <Image url="@/images/icons8-plus-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                   <Separator orientation="VERTICAL" prefHeight="200.0"/>
                   <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="65.0">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-circled-play-50.png"/>
+                               <Image url="@/images/icons8-circled-play-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
@@ -79,7 +79,7 @@
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-stop-squared-50.png"/>
+                               <Image url="@/images/icons8-stop-squared-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
@@ -88,17 +88,17 @@
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-cancel-50.png"/>
+                               <Image url="@/images/icons8-cancel-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                   <Separator orientation="VERTICAL" prefHeight="200.0"/>
                   <Button mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-info-50.png"/>
+                               <Image url="@/images/icons8-info-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
@@ -107,24 +107,24 @@
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-trash-50.png"/>
+                               <Image url="@/images/icons8-trash-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                   <Separator orientation="VERTICAL" prefHeight="200.0"/>
                   <Button mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@/images/icons8-settings-50.png"/>
+                               <Image url="@/images/icons8-settings-50.png"/>
                            </image>
                         </ImageView>
                      </graphic>
                   </Button>
                </children>
                <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                </padding>
             </HBox>
          </children>
@@ -133,7 +133,7 @@
    <bottom>
       <HBox prefHeight="22.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Label text="Status"/>
+             <Label text="Status"/>
          </children>
       </HBox>
    </bottom>
@@ -142,26 +142,27 @@
          <items>
             <AnchorPane maxWidth="250.0" minWidth="150.0" prefWidth="200.0">
                <children>
-                  <TreeView layoutX="-40.0" layoutY="7.0" prefHeight="376.0" prefWidth="238.0"
-                            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                            AnchorPane.topAnchor="0.0"/>
+                   <TreeView layoutX="-40.0" layoutY="7.0" prefHeight="376.0" prefWidth="238.0"
+                             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                             AnchorPane.topAnchor="0.0"/>
                </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
-                  <TableView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                             AnchorPane.topAnchor="0.0">
+                   <TableView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
                      <columns>
-                        <TableColumn editable="false" minWidth="100.0" prefWidth="100.0" text="File Name"/>
-                        <TableColumn editable="false" maxWidth="100.0" minWidth="60.0" prefWidth="100.0" text="Status"/>
-                        <TableColumn editable="false" minWidth="150.0" prefWidth="400.0" text="Progress"/>
-                        <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
-                                     text="Time Left"/>
-                        <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
-                                     text="Time Elapsed"/>
+                         <TableColumn editable="false" minWidth="100.0" prefWidth="100.0" text="File Name"/>
+                         <TableColumn editable="false" maxWidth="100.0" minWidth="60.0" prefWidth="100.0"
+                                      text="Status"/>
+                         <TableColumn editable="false" minWidth="150.0" prefWidth="400.0" text="Progress"/>
+                         <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
+                                      text="Time Left"/>
+                         <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
+                                      text="Time Elapsed"/>
                      </columns>
                      <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                      </columnResizePolicy>
                   </TableView>
                </children>
