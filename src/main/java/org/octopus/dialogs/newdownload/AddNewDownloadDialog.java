@@ -26,27 +26,29 @@ package org.octopus.dialogs.newdownload;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
 import org.octopus.downloads.DownloadInfo;
 
 public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
-    private Parent root;
-    private TextField addressText;
     private ButtonType downloadButtonType;
-    private ButtonType cancelButtonType;
+    private AddNewDownloadController controller;
 
     public AddNewDownloadDialog() {
         setTitle("Add new download");
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/dialogs/new-download-dialog.fxml"));
-            root = loader.load();
-            AddNewDownloadController controller = loader.getController();
-            addressText = controller.addressText;
+            Parent root = loader.load();
+            controller = loader.getController();
+            controller.setRoot((Stage) getDialogPane().getScene().getWindow());
 
             downloadButtonType = new ButtonType("Download", ButtonBar.ButtonData.OK_DONE);
-            cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
             getDialogPane().getButtonTypes().addAll(downloadButtonType, cancelButtonType);
             getDialogPane().setContent(root);
 
@@ -58,7 +60,7 @@ public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
 
         setResultConverter(buttonType -> {
             if (buttonType == downloadButtonType) {
-                return new DownloadInfo(addressText.getText());
+                return new DownloadInfo(controller.getAddress(), controller.getBaseDirectory());
             }
 
             return null;

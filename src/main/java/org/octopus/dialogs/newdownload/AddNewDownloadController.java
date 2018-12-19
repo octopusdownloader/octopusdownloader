@@ -24,8 +24,46 @@
 
 package org.octopus.dialogs.newdownload;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AddNewDownloadController {
     public TextField addressText;
+    public TextField downloadDirectoryText;
+    Path downloadDir;
+    private Stage root;
+
+    @FXML
+    public void initialize() {
+        downloadDir = Paths.get(System.getProperty("user.home"), "Downloads");
+        downloadDirectoryText.setText(downloadDir.toString());
+    }
+
+    public void setRoot(Stage root) {
+        this.root = root;
+    }
+
+    public void openDirectoryPicker(ActionEvent actionEvent) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDir = directoryChooser.showDialog(root);
+
+        if (selectedDir != null) {
+            downloadDirectoryText.setText(selectedDir.getAbsolutePath());
+        }
+    }
+
+    public String getAddress() {
+        return addressText.getText();
+    }
+
+    public Path getBaseDirectory() {
+        return Paths.get(downloadDirectoryText.getText());
+    }
 }
