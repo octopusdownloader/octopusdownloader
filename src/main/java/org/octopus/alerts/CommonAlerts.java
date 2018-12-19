@@ -45,7 +45,7 @@ public class CommonAlerts {
         ex.printStackTrace(pw);
         String exceptionText = sw.toString();
 
-        Label label = new Label("Ooops:");
+        Label label = new Label("Stacktrace:");
 
         TextArea textArea = new TextArea(exceptionText);
         textArea.setEditable(false);
