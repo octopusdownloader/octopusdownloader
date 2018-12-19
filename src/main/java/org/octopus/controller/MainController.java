@@ -39,7 +39,6 @@ public class MainController {
     private void initialize() {
         tableView.setEditable(false);
         tableView.setPlaceholder(new Label("Such empty :("));
-
     }
 
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {

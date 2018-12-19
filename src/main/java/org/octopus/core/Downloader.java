@@ -59,6 +59,7 @@ public class Downloader {
                         StandardOpenOption.WRITE
                 )
         ) {
+            progressReporter.updateState(id, DownloadState.IN_PROGRESS);
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
             int transferredBytes;
