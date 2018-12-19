@@ -40,6 +40,6 @@ public class MainController {
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
         new AddNewDownloadDialog()
                 .showAndWait()
-                .ifPresent(downloadInfo -> System.out.println(downloadInfo.getUrl()));
+                .ifPresent(System.out::println);
     }
 }
