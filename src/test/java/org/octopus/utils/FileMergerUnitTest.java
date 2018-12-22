@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class FileHandlerUnitTest {
+public class FileMergerUnitTest {
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
     private static ArrayList<Path> paths;
@@ -58,34 +58,27 @@ public class FileHandlerUnitTest {
 
         try {
             checksum = com.google.common.io.Files.asByteSource(new File(image.toString())).hash(Hashing.md5());
-
             byte[] imageByte = Files.readAllBytes(image);
-
             byte[] buffer = new byte[imageByte.length / 4]; //creating 4 parts
 
             File fr = new File(String.valueOf(image));
             inputStream = new FileInputStream(fr);
             bufferedInputStream = new BufferedInputStream(inputStream);
-
             int byteRead = 0, i = 0;
+
             while ((byteRead = bufferedInputStream.read(buffer)) > 0) {
                 Path newPath = Paths.get(tmpFolder.getRoot().getCanonicalPath(), String.valueOf(i++) + ".part");
                 paths.add(newPath);
                 File newFile = new File(newPath.toString());
-
                 outputStream = new FileOutputStream(newFile);
                 outputStream.write(buffer, 0, byteRead);
                 outputStream.close();
             }
-
             inputStream.close();
-
         } catch (IOException e) {
             e.getMessage();
             e.printStackTrace();
         }
-
-
     }
 
     @AfterClass
@@ -96,7 +89,7 @@ public class FileHandlerUnitTest {
     @Test()
     public void stage1_shouldAppendFilesTest() {
         try {
-            FileHandler.AppendFiles(paths);
+            FileMerger.AppendFiles(paths);
             HashCode appendFilesCode = com.google.common.io.Files.asByteSource(paths.get(0).toFile()).hash(Hashing.md5());
             assertEquals(checksum, appendFilesCode);
         } catch (IOException e) {
@@ -107,7 +100,7 @@ public class FileHandlerUnitTest {
     @Test(expected = IOException.class)
     public void stage2_shouldnotAppendWhenFilesNotExist() throws IOException {
         paths.add(Paths.get(tmpFolder.getRoot().getCanonicalPath(), "5.part"));
-        FileHandler.AppendFiles(paths);
+        FileMerger.AppendFiles(paths);
     }
 
     @Test
@@ -116,15 +109,13 @@ public class FileHandlerUnitTest {
         //getting last part added
         Path path = paths.get(5);
         File fd = new File(path.toAbsolutePath().toString());
-
         FileOutputStream outputStream = new FileOutputStream(fd);
         byte[] bytes = Files.readAllBytes(image);
         outputStream.write(bytes);
         outputStream.flush();
         outputStream.close();
-        FileHandler.AppendFiles(paths);
+        FileMerger.AppendFiles(paths);
         HashCode appendFilesCode = com.google.common.io.Files.asByteSource(paths.get(0).toFile()).hash(Hashing.md5());
         assertNotEquals(appendFilesCode, checksum);
-
     }
 }

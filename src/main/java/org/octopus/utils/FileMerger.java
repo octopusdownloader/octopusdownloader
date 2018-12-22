@@ -25,7 +25,6 @@
 
 package org.octopus.utils;
 
-
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
@@ -33,22 +32,18 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
-public class FileHandler {
+public class FileMerger {
     final static int INDEX = 0;
 
     public static void AppendFiles(ArrayList<Path> paths) throws IOException, NullPointerException {
 
         FileChannel finalFile;
-
         finalFile = FileChannel.open(paths.get(INDEX).toAbsolutePath(), StandardOpenOption.APPEND);
 
-
         for (int i = 1; i < paths.size(); i++) {
-
             if (!Files.exists(paths.get(i).toAbsolutePath()))
                 throw new IOException("File not exist " + paths.get(i).getFileName());
             FileChannel sourceFile = FileChannel.open(paths.get(i).toAbsolutePath(), StandardOpenOption.READ);
-
             long size = sourceFile.size();
             long count = 0;
             long position = 0;
@@ -58,14 +53,9 @@ public class FileHandler {
                     position += count;
                     size -= count;
                 }
-
-
             }
             sourceFile.close();
         }
         finalFile.close();
-
-
     }
-
 }
