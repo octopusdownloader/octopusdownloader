@@ -34,8 +34,9 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
 
-public class Downloader {
+public class Downloader implements Callable<Long> {
     private int id;
     private Downloadable downloadable;
     private Path file;
@@ -80,6 +81,12 @@ public class Downloader {
     }
 
     public long getBytesReceived() {
+        return bytesReceived;
+    }
+
+    @Override
+    public Long call() throws Exception {
+        download();
         return bytesReceived;
     }
 }
