@@ -32,9 +32,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
-import org.octopus.downloads.DownloadInfo;
+import org.octopus.downloads.DownloadJob;
 
-public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
+public class AddNewDownloadDialog extends Dialog<DownloadJob> {
     private ButtonType downloadButtonType;
     private AddNewDownloadController controller;
 
@@ -61,7 +61,7 @@ public class AddNewDownloadDialog extends Dialog<DownloadInfo> {
         // TODO validation
         setResultConverter(buttonType -> {
             if (buttonType == downloadButtonType) {
-                return new DownloadInfo(controller.getAddress(), controller.getBaseDirectory(), controller.getName());
+                return new DownloadJob(controller.getAddress(), controller.getBaseDirectory(), controller.getName());
             }
 
             return null;

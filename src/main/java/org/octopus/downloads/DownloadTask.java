@@ -54,6 +54,13 @@ public class DownloadTask extends Task<Void> {
                 ProgressReporter.OnBytesReceived,
                 evt -> updateProgress((Long) evt.getNewValue(), this.maxSize)
         );
+
+        progressReporter.addPropertyChangeListener(
+                ProgressReporter.OnStatusChanged,
+                evt -> {
+                    System.out.println(evt.getPropertyName() + ":" + evt.getNewValue().toString());
+                }
+        );
     }
 
     @Override
@@ -64,9 +71,13 @@ public class DownloadTask extends Task<Void> {
 
         // TODO handle exceptions
         for (Future<Long> future: futures) {
-
+            // do nothing yet
         }
 
         return null;
+    }
+
+    public int getId() {
+        return id;
     }
 }

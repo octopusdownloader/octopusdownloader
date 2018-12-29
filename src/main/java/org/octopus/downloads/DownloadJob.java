@@ -24,6 +24,57 @@
 
 package org.octopus.downloads;
 
-public class DownloadJob {
+import org.octopus.core.misc.ProgressReporter;
 
+import java.nio.file.Path;
+
+public class DownloadJob {
+    private String url;
+    private String filename;
+    private Path baseDirectory;
+    private ProgressReporter progressReporter;
+
+    public DownloadJob(String url, Path baseDirectory, String filename) {
+        this.url = url;
+        this.baseDirectory = baseDirectory;
+        this.filename = filename;
+        this.progressReporter = new ProgressReporter();
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Path getBaseDirectory() {
+        return baseDirectory;
+    }
+
+    public void setBaseDirectory(Path baseDirectory) {
+        this.baseDirectory = baseDirectory;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public ProgressReporter getProgressReporter() {
+        return progressReporter;
+    }
+
+    @Override
+    public String toString() {
+        return "DownloadJob{" +
+                "url='" + url + '\'' +
+                ", filename='" + filename + '\'' +
+                ", baseDirectory=" + baseDirectory +
+                '}';
+    }
 }
