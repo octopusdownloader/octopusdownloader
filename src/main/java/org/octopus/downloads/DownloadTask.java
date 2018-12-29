@@ -28,7 +28,6 @@ import javafx.concurrent.Task;
 import org.octopus.core.Downloader;
 import org.octopus.core.misc.ProgressReporter;
 
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -67,7 +66,6 @@ public class DownloadTask extends Task<Void> {
         for (Future<Long> future: futures) {
 
         }
-
 
         return null;
     }

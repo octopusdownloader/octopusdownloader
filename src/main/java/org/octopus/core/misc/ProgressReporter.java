@@ -27,13 +27,14 @@ package org.octopus.core.misc;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ProgressReporter {
     public static final String OnBytesReceived = "OnBytesReceived";
     public static final String OnStatusChanged = "OnStatusChanged";
 
     private PropertyChangeSupport propertyChangeSupport;
-    private long receivedBytes = 0;
+    private AtomicLong receivedBytes = new AtomicLong(0);
     private HashMap<Integer, DownloadState> downloadStateHashMap;
     private HashMap<Integer, Long> downloadCompletions;
 
@@ -53,8 +54,9 @@ public class ProgressReporter {
 
     public void accumulateReceivedBytes(int id, long amount) {
         downloadCompletions.put(id, amount);
-        propertyChangeSupport.firePropertyChange(OnBytesReceived, this.receivedBytes, this.receivedBytes + amount);
-        this.receivedBytes += amount;
+        Long oldVal = receivedBytes.get();
+        receivedBytes.addAndGet(amount);
+        propertyChangeSupport.firePropertyChange(OnBytesReceived, oldVal, receivedBytes);
     }
 
     public void updateState(int id, DownloadState state) {
@@ -69,11 +71,11 @@ public class ProgressReporter {
     }
 
     public long getReceivedBytes() {
-        return receivedBytes;
+        return receivedBytes.get();
     }
 
     public void setReceivedBytes(long receivedBytes) {
-        this.receivedBytes = receivedBytes;
+        this.receivedBytes.set(receivedBytes);
     }
 
     public HashMap<Integer, DownloadState> getDownloadStateHashMap() {
