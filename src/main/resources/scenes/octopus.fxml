@@ -113,7 +113,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                  <Button mnemonicParsing="false">
+                   <Button fx:id="settingButton" onMouseClicked="#openSettingDialog" mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>

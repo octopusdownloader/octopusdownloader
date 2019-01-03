@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,30 +22,21 @@
  * SOFTWARE.
  */
 
-package org.octopus.controller;
+package org.octopus.dialogs.setting;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
-import org.octopus.dialogs.setting.OctupusSettingDialog;
+import javafx.stage.Stage;
 
-public class MainController {
-    public Button addDownloadButton;
-    public Button settingButton;
+public class OctupusSettingController {
+
+    private Stage root;
+
     @FXML
-    private void initialize() {
+    private void initialized() {
 
     }
 
-    public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
-        new AddNewDownloadDialog()
-                .showAndWait()
-                .ifPresent(System.out::println);
-    }
-
-    public void openSettingDialog(MouseEvent mouseEvent) {
-        new OctupusSettingDialog()
-                .showAndWait();
+    public void setRoot(Stage root) {
+        this.root = root;
     }
 }
