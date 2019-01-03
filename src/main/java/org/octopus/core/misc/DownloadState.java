@@ -30,4 +30,5 @@ public enum DownloadState {
     PAUSED,
     COMPLETED,
     FAILED,
+    RETRY
 }

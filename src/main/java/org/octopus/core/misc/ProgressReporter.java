@@ -30,13 +30,11 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ProgressReporter {
-    public static final String OnBytesReceived = "OnBytesReceived";
-    public static final String OnStatusChanged = "OnStatusChanged";
-
     private PropertyChangeSupport propertyChangeSupport;
     private AtomicLong receivedBytes = new AtomicLong(0);
     private HashMap<Integer, DownloadState> downloadStateHashMap;
     private HashMap<Integer, Long> downloadCompletions;
+    private int completedDownloads = 0;
 
     public ProgressReporter() {
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -44,30 +42,39 @@ public class ProgressReporter {
         downloadCompletions = new HashMap<>();
     }
 
-    public void addPropertyChangeListener(String name, PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(name, listener);
+    public void addPropertyChangeListener(ProgressEvent event, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(event.name(), listener);
     }
 
-    public void removePropertyChangeListener(String name, PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(name, listener);
+    public void removePropertyChangeListener(ProgressEvent event, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(event.name(), listener);
     }
 
     public void accumulateReceivedBytes(int id, long amount) {
-        downloadCompletions.put(id, amount);
+        downloadCompletions.put(id, downloadCompletions.get(id) + amount);
         Long oldVal = receivedBytes.get();
         receivedBytes.addAndGet(amount);
-        propertyChangeSupport.firePropertyChange(OnBytesReceived, oldVal, receivedBytes);
+        propertyChangeSupport.firePropertyChange(ProgressEvent.OnBytesReceived.name(), oldVal, receivedBytes);
     }
 
     public void updateState(int id, DownloadState state) {
         this.propertyChangeSupport.fireIndexedPropertyChange(
-                OnStatusChanged,
+                ProgressEvent.OnStatusChanged.name(),
                 id,
                 downloadStateHashMap.getOrDefault(id, DownloadState.UNKNOWN),
                 state
         );
 
         this.downloadStateHashMap.put(id, state);
+
+        if (state == DownloadState.COMPLETED) completedDownloads++;
+
+        if (isDownloadCompleted())
+            propertyChangeSupport.firePropertyChange(ProgressEvent.OnDownloadComplete.name(), false, true);
+    }
+
+    private boolean isDownloadCompleted() {
+        return completedDownloads == downloadCompletions.size();
     }
 
     public long getReceivedBytes() {

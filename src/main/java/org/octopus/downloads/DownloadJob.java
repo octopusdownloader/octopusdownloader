@@ -27,18 +27,23 @@ package org.octopus.downloads;
 import org.octopus.core.misc.ProgressReporter;
 
 import java.nio.file.Path;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class DownloadJob {
     private String url;
     private String filename;
     private Path baseDirectory;
     private ProgressReporter progressReporter;
+    private ExecutorService executorService;
+    private long maxLength;
 
     public DownloadJob(String url, Path baseDirectory, String filename) {
         this.url = url;
         this.baseDirectory = baseDirectory;
         this.filename = filename;
         this.progressReporter = new ProgressReporter();
+        this.executorService = Executors.newCachedThreadPool();
     }
 
     public String getUrl() {
@@ -67,6 +72,13 @@ public class DownloadJob {
 
     public ProgressReporter getProgressReporter() {
         return progressReporter;
+    }
+
+    public ExecutorService getExecutorService() {
+        if (executorService.isShutdown())
+            this.executorService = Executors.newCachedThreadPool();
+
+        return executorService;
     }
 
     @Override

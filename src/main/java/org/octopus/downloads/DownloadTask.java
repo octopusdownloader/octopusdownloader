@@ -26,6 +26,7 @@ package org.octopus.downloads;
 
 import javafx.concurrent.Task;
 import org.octopus.core.Downloader;
+import org.octopus.core.misc.ProgressEvent;
 import org.octopus.core.misc.ProgressReporter;
 
 import java.util.ArrayList;
@@ -42,23 +43,32 @@ public class DownloadTask extends Task<Void> {
     private int id;
     private long maxSize;
 
-    public DownloadTask(int id, ArrayList<Downloader> downloaders, long maxSize) {
+    public DownloadTask(int id, ArrayList<Downloader> downloaders, ProgressReporter progressReporter, long maxSize) {
         this.id = id;
         this.downloaders = downloaders;
-        this.progressReporter = new ProgressReporter();
         this.maxSize = maxSize;
         this.executorService = Executors.newCachedThreadPool();
         this.futures = new ArrayList<>();
+        this.progressReporter = progressReporter;
 
-        progressReporter.addPropertyChangeListener(
-                ProgressReporter.OnBytesReceived,
+        this.progressReporter.addPropertyChangeListener(
+                ProgressEvent.OnBytesReceived,
                 evt -> updateProgress((Long) evt.getNewValue(), this.maxSize)
         );
 
-        progressReporter.addPropertyChangeListener(
-                ProgressReporter.OnStatusChanged,
+        this.progressReporter.addPropertyChangeListener(
+                ProgressEvent.OnStatusChanged,
                 evt -> {
                     System.out.println(evt.getPropertyName() + ":" + evt.getNewValue().toString());
+                }
+        );
+
+        this.progressReporter.addPropertyChangeListener(
+                ProgressEvent.OnDownloadComplete,
+                evt -> {
+                    System.out.println("Download completed");
+                    updateMessage("Completed");
+                    updateTitle("Download completed");
                 }
         );
     }
@@ -69,9 +79,8 @@ public class DownloadTask extends Task<Void> {
             futures.add(executorService.submit(downloader));
         }
 
-        // TODO handle exceptions
-        for (Future<Long> future: futures) {
-            // do nothing yet
+        for (Future f : futures) {
+
         }
 
         return null;
