@@ -27,10 +27,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-            minWidth="-Infinity"
-            prefHeight="476.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
-            fx:controller="org.octopus.dialogs.setting.OctupusSettingController"
->
+            minWidth="-Infinity" prefHeight="476.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
+            fx:controller="org.octopus.dialogs.setting.OctupusSettingController">
     <center>
         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
@@ -48,12 +46,13 @@
                                     <items>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                             <children>
-                                                <TextField layoutX="134.0" layoutY="99.0" prefHeight="22.0"
-                                                           prefWidth="236.0"/>
-                                                <RadioButton layoutX="8.0" layoutY="14.0" mnemonicParsing="false"
+                                                <TextField fx:id="httpPortText" layoutX="134.0" layoutY="99.0"
+                                                           prefHeight="22.0" prefWidth="236.0" promptText="port"/>
+                                                <RadioButton id="http" fx:id="buttonHttp" layoutX="14.0" layoutY="14.0"
+                                                             mnemonicParsing="false" onAction="#setFieldActive"
                                                              selected="true" text="HTTP "/>
-                                                <TextField layoutX="134.0" layoutY="48.0" prefHeight="38.0"
-                                                           prefWidth="233.0"/>
+                                                <TextField fx:id="httpHostText" layoutX="134.0" layoutY="48.0"
+                                                           prefHeight="38.0" prefWidth="233.0" promptText="proxy url"/>
                                                 <Label layoutX="39.0" layoutY="54.0" prefHeight="26.0" prefWidth="81.0"
                                                        text="HOST"/>
                                                 <Label layoutX="39.0" layoutY="105.0" prefHeight="26.0" prefWidth="71.0"
@@ -62,12 +61,15 @@
                                         </AnchorPane>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="264.0" prefWidth="598.0">
                                             <children>
-                                                <RadioButton layoutX="22.0" layoutY="14.0" mnemonicParsing="false"
+                                                <RadioButton fx:id="buttonSocket" layoutX="14.0" layoutY="14.0"
+                                                             mnemonicParsing="false" onAction="#setFieldActive"
                                                              text="Socket "/>
                                                 <Label layoutX="45.0" layoutY="61.0" text="HOST"/>
                                                 <Label layoutX="45.0" layoutY="106.0" text="PORT"/>
-                                                <TextField layoutX="139.0" layoutY="55.0"/>
-                                                <TextField layoutX="139.0" layoutY="100.0"/>
+                                                <TextField fx:id="socketHostText" layoutX="139.0" layoutY="55.0"
+                                                           promptText="socket url"/>
+                                                <TextField fx:id="socketPortText" layoutX="139.0" layoutY="100.0"
+                                                           promptText="port"/>
                                             </children>
                                         </AnchorPane>
                                     </items>

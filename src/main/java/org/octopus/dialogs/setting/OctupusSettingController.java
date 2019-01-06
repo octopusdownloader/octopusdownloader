@@ -24,16 +24,53 @@
 
 package org.octopus.dialogs.setting;
 
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
+
 public class OctupusSettingController {
+
+    public ToggleGroup toggleGroup;
+    public TextField httpPortText;
+    public TextField httpHostText;
+    public TextField socketPortText;
+    public TextField socketHostText;
+    public RadioButton buttonHttp;
+    public RadioButton buttonSocket;
 
     private Stage root;
 
     @FXML
-    private void initialized() {
+    private void initialize() {
+        toggleGroup = new ToggleGroup();
+        buttonHttp.setToggleGroup(toggleGroup);
+        buttonSocket.setToggleGroup(toggleGroup);
+        buttonHttp.setSelected(true);
 
+    }
+
+
+    @FXML
+    public void setFieldActive(ActionEvent event) {
+
+        RadioButton radioButton = (RadioButton) toggleGroup.getSelectedToggle();
+        System.out.println(radioButton.getId());
+        if (radioButton.getId().equals(buttonHttp.getId())) {
+            socketHostText.disableProperty();
+            socketPortText.disableProperty();
+            httpHostText.editableProperty();
+            httpPortText.editableProperty();
+        } else {
+            socketHostText.editableProperty();
+            socketPortText.editableProperty();
+            httpHostText.disableProperty();
+            httpPortText.disableProperty();
+        }
     }
 
     public void setRoot(Stage root) {
