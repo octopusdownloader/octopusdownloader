@@ -3,7 +3,7 @@
 <!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2018 octopusdownloader
+  ~ Copyright (c) 2019 octopusdownloader
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -129,7 +129,8 @@
                               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                               AnchorPane.topAnchor="-2.0">
                      <columns>
-                         <TableColumn editable="false" minWidth="100.0" prefWidth="100.0" text="File Name"/>
+                         <TableColumn fx:id="filename" editable="false" minWidth="100.0" prefWidth="100.0"
+                                      text="File Name"/>
                          <TableColumn editable="false" maxWidth="100.0" minWidth="60.0" prefWidth="100.0"
                                       text="Status"/>
                          <TableColumn editable="false" minWidth="150.0" prefWidth="400.0" text="Progress"/>

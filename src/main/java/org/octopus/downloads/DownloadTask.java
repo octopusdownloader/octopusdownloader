@@ -58,7 +58,7 @@ public class DownloadTask extends Task<Void> {
                 ProgressEvent.OnDownloadComplete,
                 evt -> {
                     System.out.println("Download completed");
-                    updateMessage("Completed");
+                    updateMessage("Done");
                     updateTitle("Download completed");
                     System.out.println("Total " + progressReporter.getReceivedBytes());
                 }
@@ -73,8 +73,7 @@ public class DownloadTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
-        System.out.println("Starting download");
-        downloadJob.prepareDownload();
+        updateMessage("Downloading");
         downloadJob.download();
         return null;
     }

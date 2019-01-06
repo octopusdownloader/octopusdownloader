@@ -66,7 +66,6 @@ public class DownloadJob {
     }
 
     public void prepareDownload() throws Exception {
-        System.out.println(url.getProtocol());
         switch (url.getProtocol()) {
             case "http":
             case "https":

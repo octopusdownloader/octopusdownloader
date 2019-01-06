@@ -25,9 +25,8 @@
 package org.octopus.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
 import org.octopus.downloads.DownloadManager;
@@ -35,19 +34,32 @@ import org.octopus.downloads.DownloadManager;
 public class MainController {
     public Button addDownloadButton;
     public TableView tableView;
+    public TableColumn filename;
 
     @FXML
+    @SuppressWarnings("unchecked")
     private void initialize() {
         tableView.setEditable(false);
         tableView.setPlaceholder(new Label("Such empty :("));
+
+        filename.setCellValueFactory(new PropertyValueFactory<>("filename"));
+        System.out.println(filename);
     }
 
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
         new AddNewDownloadDialog()
                 .showAndWait()
                 .ifPresent(downloadJob -> {
-                    DownloadManager.getInstance().addDownload(downloadJob);
-                    System.out.println("Download added " + downloadJob);
+                    try {
+                        downloadJob.prepareDownload();
+                        System.out.println("Download added " + downloadJob.getFileName());
+                        DownloadManager.getInstance().addDownload(downloadJob);
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setHeaderText("Error downloading file");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
+                    }
                 });
     }
 }
