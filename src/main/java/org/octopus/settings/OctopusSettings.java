@@ -34,8 +34,7 @@ import java.nio.file.Paths;
 public class OctopusSettings implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    //eager initialization
-    private volatile static OctopusSettings instance = new OctopusSettings();
+
     private final String ROOT = System.getProperty("user.home");
     private final String DIRECTORY = ".octopus";
     private final String FILENAME = "setting.ser";
@@ -43,7 +42,12 @@ public class OctopusSettings implements Serializable {
     private OctupusGeneralSettings generalSettings;
     private OctupusProxySettings proxySettings;
 
+    //eager initialization
+    private volatile static OctopusSettings instance = new OctopusSettings();
+
+
     private OctopusSettings() {
+
         this.generalSettings = new OctupusGeneralSettings();
         this.proxySettings = new OctupusProxySettings();
         //check the file is available
@@ -67,7 +71,9 @@ public class OctopusSettings implements Serializable {
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (FileNotFoundException fileNotFound) {
-            System.out.println("ERROR: While Creating or Opening the File dvd.xml");
+            fileNotFound.getMessage();
+            fileNotFound.printStackTrace();
+            System.out.println("ERROR: While Creating or Opening the File");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR: Saving IO Exception ");
@@ -102,14 +108,18 @@ public class OctopusSettings implements Serializable {
 
     private boolean checkFileAvailability() {
         Path path = Paths.get(ROOT, DIRECTORY, FILENAME);
+        System.out.println(Files.exists(path));
         return Files.exists(path);
     }
 
     private void makedir() {
         Path path = Paths.get(ROOT, DIRECTORY);
         try {
-            Files.createDirectory(path);
+            Files.createDirectories(path);
+            System.out.println("Folders " + Files.exists(path) + " " + path.toString());
         } catch (IOException e) {
+            e.printStackTrace();
+            e.getMessage();
             CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "Octupus cant create the " +
                     "directory .Octupus in " + ROOT, e);
         }

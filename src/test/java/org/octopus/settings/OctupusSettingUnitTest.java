@@ -24,7 +24,7 @@
 
 package org.octopus.settings;
 
-import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class OctupusSettingUnitTest {
     private static final Path FILEPATH = Paths.get(ROOT, DIRECTORY, FILENAME);
 
     //deleting folder n setting file
-    @BeforeClass
+    @AfterClass
     public static void deleteFolder() {
         Path path = Paths.get(ROOT, DIRECTORY);
         try {

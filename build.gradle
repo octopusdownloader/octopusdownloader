@@ -61,14 +61,22 @@ dependencies {
 }
 
 test{
+
+    systemProperties System.properties
+    systemProperty "user.home" , "octopusTest"
     useJUnit{
         filter{
             include '**/*TestSuite.class'
             include '**/*UnitTest.class'
         }
     }
-    
-    systemProperties(System.getProperties())
+
+
+        // Assign all Java system properties from
+        // the command line to the JavaExec task.
+
+    //systemProperties(System.getProperties())
+    //tasks.withType(Test) { systemProperty 'user.home', System.getProperty("user.home") }
 }
 
 subprojects {
