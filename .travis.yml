@@ -1,34 +1,49 @@
 language: java
-
 jdk:
   - oraclejdk8
-
 os:
 - linux
 - osx
-
 osx_image: xcode9.3
-
 before_install:
   - chmod +x gradlew
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"
 script:
-- ./gradlew assemble
-- ./gradlew clean check -Dmockserver.logLevel=ERROR
-
+  - "./gradlew assemble"
+  - "./gradlew clean check -Dmockserver.logLevel=ERROR"
 after_success:
 - bash <(curl -s https://codecov.io/bash)
-
 branches:
   except:
   - gh-pages
   - docs
+
+before_deploy:
+  - "./gradlew jfxNative"
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: P0RrZdMXFc15trTdmPOHw9Yk14PAouc1sd9aJ2S44C27fGCg3KqOXu403EgnFQlPD3DVnIM4q1aaQoyGQOkwgEjuRZb1aq5+4bV2te5b7loyEtBnI8X8L/Qn6mxTOmq30EJKDXAUP8WfU3a5luEdSpgLP2v+QpP0sdo+gA580bqbZbMDNT3XnU8qlEMyPLmWlPr13mn9MWGmPsTKinVW4qi3yKRFzT621icgxVFn+qEwxN/buJ/T5ymQKbojwlLltWRwa92T76jg7Uutu5SO+a3qsPhjxTmWBqApBFpU4puCmmqdA2Xs9ZXY63r4Hq9mFoTo2jtgsqdZOsn5QtHdU4auyT02vXoqZDq7Cgeb/OZc7VLFN2UhxTFSIRUAc7PM4jKGCuxjHNn8uCGxsJXYAvzX97t4TBG3kOL0ljFYmJ/9b1ITvbxnaOxcDBn//qCA6zqfa++kG3kReuUxMEGcu4p0lfejeItXsrclObQRWbMM5D4ea80JkPMHFNnwLXnVtGpmNPC2OhKs/cYGdiK0VtNcvf+fMrPgBgSGRZKBEsbFUT5rp3Ao7PrImmgIXNZ6wFnaDZmMPiC9s2uYC1/VWjzIWoYR01IG6HqVdVWaKwgRTO+EzaifPSx6uvRvOUGqf0ZQ6uEfFRq2R2/TolQCtQ4v/oyVCNkZ16pA96iAxqU=
+    skip_cleanup: true
+    file: "build/jfx/native/octopusdownloader-*.app"
+    on:
+      condition: $TRAVIS_OS_NAME = osx
+      branch: release
+      tags: true
+
+  - provider: releases
+    api_key:
+      secure: P0RrZdMXFc15trTdmPOHw9Yk14PAouc1sd9aJ2S44C27fGCg3KqOXu403EgnFQlPD3DVnIM4q1aaQoyGQOkwgEjuRZb1aq5+4bV2te5b7loyEtBnI8X8L/Qn6mxTOmq30EJKDXAUP8WfU3a5luEdSpgLP2v+QpP0sdo+gA580bqbZbMDNT3XnU8qlEMyPLmWlPr13mn9MWGmPsTKinVW4qi3yKRFzT621icgxVFn+qEwxN/buJ/T5ymQKbojwlLltWRwa92T76jg7Uutu5SO+a3qsPhjxTmWBqApBFpU4puCmmqdA2Xs9ZXY63r4Hq9mFoTo2jtgsqdZOsn5QtHdU4auyT02vXoqZDq7Cgeb/OZc7VLFN2UhxTFSIRUAc7PM4jKGCuxjHNn8uCGxsJXYAvzX97t4TBG3kOL0ljFYmJ/9b1ITvbxnaOxcDBn//qCA6zqfa++kG3kReuUxMEGcu4p0lfejeItXsrclObQRWbMM5D4ea80JkPMHFNnwLXnVtGpmNPC2OhKs/cYGdiK0VtNcvf+fMrPgBgSGRZKBEsbFUT5rp3Ao7PrImmgIXNZ6wFnaDZmMPiC9s2uYC1/VWjzIWoYR01IG6HqVdVWaKwgRTO+EzaifPSx6uvRvOUGqf0ZQ6uEfFRq2R2/TolQCtQ4v/oyVCNkZ16pA96iAxqU=
+    skip_cleanup: true
+    file: "build/jfx/native/octopusdownloader-*.deb"
+    on:
+      condition: $TRAVIS_OS_NAME = linux
+      branch: release
+      tags: true

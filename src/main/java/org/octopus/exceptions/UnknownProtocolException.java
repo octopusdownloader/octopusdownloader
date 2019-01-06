@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,51 +22,12 @@
  * SOFTWARE.
  */
 
-package org.octopus.downloads;
+package org.octopus.exceptions;
 
-import java.nio.file.Path;
+public class UnknownProtocolException extends Exception {
+    String protocol;
 
-public class DownloadInfo {
-    private String url;
-    private String filename;
-    private Path baseDirectory;
-
-    public DownloadInfo(String url, Path baseDirectory, String filename) {
-        this.url = url;
-        this.baseDirectory = baseDirectory;
-        this.filename = filename;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Path getBaseDirectory() {
-        return baseDirectory;
-    }
-
-    public void setBaseDirectory(Path baseDirectory) {
-        this.baseDirectory = baseDirectory;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    @Override
-    public String toString() {
-        return "DownloadInfo{" +
-                "url='" + url + '\'' +
-                ", filename='" + filename + '\'' +
-                ", baseDirectory=" + baseDirectory +
-                '}';
+    public UnknownProtocolException(String protocol) {
+        super(protocol + " is unknown");
     }
 }

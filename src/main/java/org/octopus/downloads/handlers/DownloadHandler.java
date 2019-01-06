@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,21 @@
  * SOFTWARE.
  */
 
-package org.octopus.core.misc;
+package org.octopus.downloads.handlers;
 
-public enum DownloadState {
-    UNKNOWN,
-    IN_PROGRESS,
-    PAUSED,
-    COMPLETED,
-    FAILED,
-    RETRY
+import org.octopus.core.Downloader;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+
+public interface DownloadHandler {
+    ArrayList<Downloader> getDownloaders();
+
+    long fileSize();
+
+    String fileName();
+
+    void setBaseTempDirectory(Path baseTempDirectory);
+
+    ArrayList<Path> getTempFilePaths();
 }

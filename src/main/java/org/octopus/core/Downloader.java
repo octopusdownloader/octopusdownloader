@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,9 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
 
-public class Downloader {
+public class Downloader implements Callable<Long> {
     private int id;
     private Downloadable downloadable;
     private Path file;
@@ -49,6 +50,7 @@ public class Downloader {
         this.progressReporter = progressReporter;
     }
 
+    // TODO handle errors and restart downloads on demand
     public void download() throws Exception {
         try (
                 ReadableByteChannel inChan = Channels.newChannel(downloadable.getFileStream());
@@ -59,6 +61,8 @@ public class Downloader {
                         StandardOpenOption.WRITE
                 )
         ) {
+            progressReporter.updateState(id, DownloadState.IN_PROGRESS);
+            progressReporter.accumulateReceivedBytes(id, 0);
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
             int transferredBytes;
@@ -72,13 +76,25 @@ public class Downloader {
 
             // this one has finished the task
             progressReporter.updateState(this.id, DownloadState.COMPLETED);
+        } catch (InterruptedException e) {
+            progressReporter.updateState(id, DownloadState.PAUSED);
+            progressReporter.setReceivedBytesForTask(id, bytesReceived);
+            System.out.println(id + " Interrupted");
         } catch (Exception e) {
-            progressReporter.updateState(this.id, DownloadState.FAILED);
+            System.out.println(e.getMessage());
+            progressReporter.setReceivedBytesForTask(id, bytesReceived);
+            progressReporter.updateState(id, DownloadState.FAILED);
             throw e;
         }
     }
 
     public long getBytesReceived() {
+        return bytesReceived;
+    }
+
+    @Override
+    public Long call() throws Exception {
+        download();
         return bytesReceived;
     }
 }

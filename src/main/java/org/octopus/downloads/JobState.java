@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,11 @@
  * SOFTWARE.
  */
 
-package org.octopus.core.misc;
+package org.octopus.downloads;
 
-public enum DownloadState {
-    UNKNOWN,
-    IN_PROGRESS,
-    PAUSED,
-    COMPLETED,
-    FAILED,
-    RETRY
+public enum JobState {
+    Started,
+    Stopped,
+    Completed,
+    Error
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,53 +27,70 @@ package org.octopus.core.misc;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ProgressReporter {
-    public static final String OnBytesReceived = "OnBytesReceived";
-    public static final String OnStatusChanged = "OnStatusChanged";
-
     private PropertyChangeSupport propertyChangeSupport;
-    private long receivedBytes = 0;
+    private AtomicLong receivedBytes = new AtomicLong(0);
     private HashMap<Integer, DownloadState> downloadStateHashMap;
-    private HashMap<Integer, Long> downloadCompletions;
+    private ConcurrentHashMap<Integer, AtomicLong> downloadCompletions;
 
     public ProgressReporter() {
         propertyChangeSupport = new PropertyChangeSupport(this);
         downloadStateHashMap = new HashMap<>();
-        downloadCompletions = new HashMap<>();
+        downloadCompletions = new ConcurrentHashMap<>();
     }
 
-    public void addPropertyChangeListener(String name, PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(name, listener);
+    public void addPropertyChangeListener(ProgressEvent event, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(event.name(), listener);
     }
 
-    public void removePropertyChangeListener(String name, PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(name, listener);
+    public void removePropertyChangeListener(ProgressEvent event, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(event.name(), listener);
     }
 
-    public void accumulateReceivedBytes(int id, long amount) {
-        downloadCompletions.put(id, amount);
-        propertyChangeSupport.firePropertyChange(OnBytesReceived, this.receivedBytes, this.receivedBytes + amount);
-        this.receivedBytes += amount;
+    public synchronized void accumulateReceivedBytes(int id, long amount) {
+        downloadCompletions.putIfAbsent(id, new AtomicLong(0));
+        downloadCompletions.get(id).addAndGet(amount);
+
+        Long oldVal = receivedBytes.get();
+        Long newVal = receivedBytes.addAndGet(amount);
+        propertyChangeSupport.firePropertyChange(ProgressEvent.OnBytesReceived.name(), oldVal, newVal);
     }
 
-    public void updateState(int id, DownloadState state) {
+    public void setReceivedBytesForTask(int id, long amount) {
+        this.downloadCompletions.putIfAbsent(id, new AtomicLong(amount));
+    }
+
+    public synchronized void updateState(int id, DownloadState state) {
         this.propertyChangeSupport.fireIndexedPropertyChange(
-                OnStatusChanged,
+                ProgressEvent.OnStatusChanged.name(),
                 id,
-                downloadStateHashMap.getOrDefault(id, DownloadState.UNKNOWN),
+                downloadStateHashMap.getOrDefault(id, DownloadState.IN_PROGRESS),
                 state
         );
 
         this.downloadStateHashMap.put(id, state);
+
+        if (isDownloadCompleted())
+            propertyChangeSupport.firePropertyChange(ProgressEvent.OnDownloadComplete.name(), false, true);
+    }
+
+    private boolean isDownloadCompleted() {
+        for (DownloadState state : downloadStateHashMap.values()) {
+            if (state != DownloadState.COMPLETED) return false;
+        }
+        return true;
     }
 
     public long getReceivedBytes() {
-        return receivedBytes;
+        return receivedBytes.get();
     }
 
     public void setReceivedBytes(long receivedBytes) {
-        this.receivedBytes = receivedBytes;
+        this.receivedBytes.set(receivedBytes);
     }
 
     public HashMap<Integer, DownloadState> getDownloadStateHashMap() {
@@ -85,6 +102,10 @@ public class ProgressReporter {
     }
 
     public HashMap<Integer, Long> getDownloadCompletions() {
-        return downloadCompletions;
+        HashMap<Integer, Long> map = new HashMap<>();
+        for (Map.Entry<Integer, AtomicLong> entry : downloadCompletions.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().longValue());
+        }
+        return map;
     }
 }

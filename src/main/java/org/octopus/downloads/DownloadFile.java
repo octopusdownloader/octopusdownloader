@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,55 @@
  * SOFTWARE.
  */
 
-package org.octopus.core.misc;
+package org.octopus.downloads;
 
-public enum DownloadState {
-    UNKNOWN,
-    IN_PROGRESS,
-    PAUSED,
-    COMPLETED,
-    FAILED,
-    RETRY
+import java.nio.file.Path;
+
+public class DownloadFile {
+    private long from;
+    private long to;
+    private long totalBytes;
+    private Path filename;
+
+    public DownloadFile(long from, long to, Path filename) {
+        this.from = from;
+        this.to = to;
+        this.filename = filename;
+    }
+
+    public long getStartPos() {
+        return from + (totalBytes > 0 ? totalBytes - 1 : 0);
+    }
+
+    public long getFrom() {
+        return from;
+    }
+
+    public void setFrom(long from) {
+        this.from = from;
+    }
+
+    public long getTo() {
+        return to;
+    }
+
+    public void setTo(long to) {
+        this.to = to;
+    }
+
+    public long getTotalBytes() {
+        return totalBytes;
+    }
+
+    public void setTotalBytes(long totalBytes) {
+        this.totalBytes = totalBytes;
+    }
+
+    public Path getFilename() {
+        return filename;
+    }
+
+    public void setFilename(Path filename) {
+        this.filename = filename;
+    }
 }
