@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,21 +25,60 @@
 package org.octopus.controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.ProgressBarTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
+import org.octopus.downloads.DownloadManager;
+import org.octopus.downloads.DownloadTask;
 
 public class MainController {
     public Button addDownloadButton;
+    public TableView tableView;
+
+    public TableColumn filename;
+    public TableColumn status;
+    public TableColumn progress;
+    public TableColumn timestarted;
 
     @FXML
     private void initialize() {
+        initializeTable();
+    }
 
+    @SuppressWarnings("unchecked")
+    private void initializeTable() {
+        tableView.setEditable(false);
+        tableView.setPlaceholder(new Label("Such empty :("));
+
+        filename.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("title"));
+        status.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("message"));
+        timestarted.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("timestarted"));
+
+        progress.setCellValueFactory(new PropertyValueFactory<DownloadTask, Double>("progress"));
+        progress.setCellFactory(ProgressBarTableCell.<DownloadTask>forTableColumn());
+
+        timestarted.setSortType(TableColumn.SortType.ASCENDING);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addDownload(DownloadTask task) {
+        tableView.getItems().add(task);
     }
 
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
         new AddNewDownloadDialog()
                 .showAndWait()
-                .ifPresent(System.out::println);
+                .ifPresent(downloadJob -> {
+                        try {
+                            addDownload(DownloadManager.getInstance().addDownload(downloadJob));
+                        } catch (Exception e) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setHeaderText("Error downloading file");
+                            alert.setContentText(e.getMessage());
+                            alert.showAndWait();
+                        }
+                });
     }
 }

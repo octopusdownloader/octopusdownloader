@@ -26,6 +26,7 @@ package org.octopus.core.http;
 
 import org.octopus.settings.OctopusSettings;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -64,11 +65,7 @@ public class HTTPInspector {
      */
     public void inspect() throws Exception {
         finalURL = findRedirectedFinalURL(url, maxRedirects);
-        HttpURLConnection urlConnection = (HttpURLConnection) finalURL.openConnection();
-        urlConnection.setRequestProperty("User-Agent", OctopusSettings.getUserAgent());
-        urlConnection.setConnectTimeout(timeout);
-        urlConnection.setInstanceFollowRedirects(false);
-        urlConnection.connect();
+        HttpURLConnection urlConnection = getConnection(finalURL);
 
         String acceptRanges = urlConnection.getHeaderField("Accept-Ranges");
         if (acceptRanges != null && !acceptRanges.equals("none")) isAcceptingRanges = true;
@@ -80,16 +77,21 @@ public class HTTPInspector {
         headers = urlConnection.getHeaderFields();
     }
 
-    URL findRedirectedFinalURL(URL url, int maxAttempts) throws Exception {
-        if (maxAttempts <= 0) {
-            throw new RedirectLimitException(maxRedirects);
-        }
-
+    private HttpURLConnection getConnection(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setRequestProperty("User-Agent", OctopusSettings.getUserAgent());
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.connect();
+        return urlConnection;
+    }
+
+    URL findRedirectedFinalURL(URL url, int maxAttempts) throws Exception {
+        if (maxAttempts <= 0) {
+            throw new RedirectLimitException(maxRedirects);
+        }
+
+        HttpURLConnection urlConnection = getConnection(url);
 
         int respCode = urlConnection.getResponseCode();
 

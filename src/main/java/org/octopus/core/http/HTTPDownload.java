@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,6 +41,12 @@ public class HTTPDownload implements Downloadable {
         this.to = to;
     }
 
+    public HTTPDownload(URL url, long from) {
+        this.url = url;
+        this.from = from;
+        this.to = 0;
+    }
+
     String getRange() {
         return "bytes=" + from + "-" + (to == 0 ? "" : to);
     }
@@ -55,7 +61,8 @@ public class HTTPDownload implements Downloadable {
     public InputStream getFileStream() throws Exception {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setInstanceFollowRedirects(false);
-        urlConnection.setRequestProperty("Range", getRange());
+        urlConnection.setRequestMethod("GET");
+        if (to != 0) urlConnection.setRequestProperty("Range", getRange());
         urlConnection.connect();
         int respCode = urlConnection.getResponseCode();
 
@@ -67,5 +74,17 @@ public class HTTPDownload implements Downloadable {
             default:
                 throw new HTTPException("HTTP Error " + respCode);
         }
+    }
+
+    public URL getUrl() {
+        return url;
+    }
+
+    public long getFrom() {
+        return from;
+    }
+
+    public long getTo() {
+        return to;
     }
 }

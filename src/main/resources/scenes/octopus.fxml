@@ -3,7 +3,7 @@
 <!--
   ~ MIT License
   ~
-  ~ Copyright (c) 2018 octopusdownloader
+  ~ Copyright (c) 2019 octopusdownloader
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -34,29 +34,9 @@
    <top>
       <VBox prefHeight="82.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <MenuBar>
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
-                  </items>
-                </Menu>
-                 <Menu mnemonicParsing="false" text="Downloads">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                 <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About"/>
-                    </items>
-                 </Menu>
-              </menus>
-            </MenuBar>
-            <HBox prefHeight="116.0" prefWidth="600.0" spacing="5.0">
+             <HBox prefHeight="82.0" prefWidth="800.0" spacing="5.0">
                <children>
-                   <Button fx:id="addDownloadButton" mnemonicParsing="false" onMouseClicked="#openAddNewDownloadDialog"
-                           prefHeight="42.0" prefWidth="45.0">
+                   <Button fx:id="addDownloadButton" mnemonicParsing="false" onMouseClicked="#openAddNewDownloadDialog">
                      <graphic>
                          <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -66,7 +46,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                  <Button mnemonicParsing="false" prefHeight="66.0" prefWidth="65.0">
+                   <Button mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -93,7 +73,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                   <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                   <Separator orientation="VERTICAL"/>
                   <Button mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
@@ -112,7 +92,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                   <Separator orientation="VERTICAL" prefHeight="200.0"/>
+                   <Separator orientation="VERTICAL"/>
                   <Button mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
@@ -126,6 +106,9 @@
                <padding>
                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                </padding>
+                 <VBox.margin>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                 </VBox.margin>
             </HBox>
          </children>
       </VBox>
@@ -138,28 +121,22 @@
       </HBox>
    </bottom>
    <center>
-      <SplitPane dividerPositions="0.29797979797979796" BorderPane.alignment="CENTER">
+       <SplitPane BorderPane.alignment="CENTER">
          <items>
-            <AnchorPane maxWidth="250.0" minWidth="150.0" prefWidth="200.0">
+             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="359.0" prefWidth="798.0">
                <children>
-                   <TreeView layoutX="-40.0" layoutY="7.0" prefHeight="376.0" prefWidth="238.0"
-                             AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                             AnchorPane.topAnchor="0.0"/>
-               </children>
-            </AnchorPane>
-            <AnchorPane minHeight="0.0" minWidth="0.0">
-               <children>
-                   <TableView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                              AnchorPane.topAnchor="0.0">
+                   <TableView fx:id="tableView" layoutY="-2.0" prefHeight="396.0" prefWidth="798.0"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="-2.0">
                      <columns>
-                         <TableColumn editable="false" minWidth="100.0" prefWidth="100.0" text="File Name"/>
-                         <TableColumn editable="false" maxWidth="100.0" minWidth="60.0" prefWidth="100.0"
+                         <TableColumn fx:id="filename" editable="false" minWidth="100.0" prefWidth="100.0"
+                                      text="File Name"/>
+                         <TableColumn fx:id="status" editable="false" maxWidth="100.0" minWidth="60.0" prefWidth="100.0"
                                       text="Status"/>
-                         <TableColumn editable="false" minWidth="150.0" prefWidth="400.0" text="Progress"/>
-                         <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
-                                      text="Time Left"/>
-                         <TableColumn editable="false" maxWidth="300.0" minWidth="100.0" prefWidth="200.0"
-                                      text="Time Elapsed"/>
+                         <TableColumn fx:id="progress" editable="false" minWidth="150.0" prefWidth="318.0"
+                                      text="Progress"/>
+                         <TableColumn fx:id="timestarted" editable="false" maxWidth="300.0" minWidth="100.0"
+                                      prefWidth="127.0" text="Time Started"/>
                      </columns>
                      <columnResizePolicy>
                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
