@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,6 @@ public class ProgressReporter {
     private AtomicLong receivedBytes = new AtomicLong(0);
     private HashMap<Integer, DownloadState> downloadStateHashMap;
     private ConcurrentHashMap<Integer, AtomicLong> downloadCompletions;
-    private int completedDownloads = 0;
 
     public ProgressReporter() {
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -52,7 +51,7 @@ public class ProgressReporter {
         propertyChangeSupport.removePropertyChangeListener(event.name(), listener);
     }
 
-    public void accumulateReceivedBytes(int id, long amount) {
+    public synchronized void accumulateReceivedBytes(int id, long amount) {
         downloadCompletions.putIfAbsent(id, new AtomicLong(0));
         downloadCompletions.get(id).addAndGet(amount);
 
@@ -65,7 +64,7 @@ public class ProgressReporter {
         this.downloadCompletions.putIfAbsent(id, new AtomicLong(amount));
     }
 
-    public void updateState(int id, DownloadState state) {
+    public synchronized void updateState(int id, DownloadState state) {
         this.propertyChangeSupport.fireIndexedPropertyChange(
                 ProgressEvent.OnStatusChanged.name(),
                 id,
@@ -75,14 +74,15 @@ public class ProgressReporter {
 
         this.downloadStateHashMap.put(id, state);
 
-        if (state == DownloadState.COMPLETED) completedDownloads++;
-
         if (isDownloadCompleted())
             propertyChangeSupport.firePropertyChange(ProgressEvent.OnDownloadComplete.name(), false, true);
     }
 
     private boolean isDownloadCompleted() {
-        return completedDownloads == downloadCompletions.size();
+        for (DownloadState state : downloadStateHashMap.values()) {
+            if (state != DownloadState.COMPLETED) return false;
+        }
+        return true;
     }
 
     public long getReceivedBytes() {

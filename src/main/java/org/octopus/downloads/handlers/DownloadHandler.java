@@ -24,11 +24,17 @@
 
 package org.octopus.downloads.handlers;
 
-import org.octopus.downloads.DownloadFile;
+import org.octopus.core.Downloader;
 
-import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public interface DownloadHandler {
-    ArrayList<DownloadFile> createFileChunks(URL url) throws Exception;
+    ArrayList<Downloader> getDownloaders();
+
+    long fileSize();
+
+    String fileName();
+
+    void setBaseTempDirectory(Path baseTempDirectory);
 }

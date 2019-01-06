@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,6 +62,7 @@ public class Downloader implements Callable<Long> {
                 )
         ) {
             progressReporter.updateState(id, DownloadState.IN_PROGRESS);
+            progressReporter.accumulateReceivedBytes(id, 0);
             // TODO Replace this with global setting for buffer size
             ByteBuffer byteBuffer = ByteBuffer.allocate(OctopusSettings.getDownloadBufferSize());
             int transferredBytes;

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
+import org.octopus.downloads.DownloadManager;
 
 public class MainController {
     public Button addDownloadButton;
@@ -44,6 +45,9 @@ public class MainController {
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
         new AddNewDownloadDialog()
                 .showAndWait()
-                .ifPresent(System.out::println);
+                .ifPresent(downloadJob -> {
+                    DownloadManager.getInstance().addDownload(downloadJob);
+                    System.out.println("Download added " + downloadJob);
+                });
     }
 }

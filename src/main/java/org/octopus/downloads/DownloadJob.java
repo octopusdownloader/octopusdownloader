@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,51 +24,79 @@
 
 package org.octopus.downloads;
 
+import org.octopus.core.Downloader;
 import org.octopus.core.misc.ProgressReporter;
+import org.octopus.downloads.handlers.DownloadHandler;
+import org.octopus.downloads.handlers.HttpDownloadHandler;
+import org.octopus.exceptions.UnknownProtocolException;
 import org.octopus.settings.OctopusSettings;
 
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DownloadJob {
-    private String url;
-    private String filename;
+    private URL url;
+    private String fileName;
     private Path baseDirectory;
     private ProgressReporter progressReporter;
     private ExecutorService executorService;
     private long fileSize;
     private Path tempDownloadFolder;
-    private HashMap<Integer, DownloadFile> downloadFileHashMap;
+    private ArrayList<Downloader> downloaders = null;
+    private JobState state = JobState.Started;
+    private DownloadHandler downloadHandler;
+    private List<Future<Long>> futures;
 
-    public DownloadJob(String url, Path baseDirectory, String filename) throws IOException {
+    public DownloadJob(URL url, Path baseDirectory, String fileName) {
         this.url = url;
         this.baseDirectory = baseDirectory;
-        this.filename = filename;
+        this.fileName = fileName;
         this.progressReporter = new ProgressReporter();
+        this.futures = new ArrayList<>();
+    }
+
+    public void prepareDownload() throws Exception {
+        System.out.println(url.getProtocol());
+        switch (url.getProtocol()) {
+            case "http":
+            case "https":
+                downloadHandler = new HttpDownloadHandler(url, this.progressReporter);
+                if (this.fileName.isEmpty()) this.fileName = downloadHandler.fileName();
+                tempDownloadFolder = createTempDownloadDirectory();
+                downloadHandler.setBaseTempDirectory(tempDownloadFolder);
+                break;
+
+            default:
+                throw new UnknownProtocolException(url.getProtocol());
+        }
+
+        this.downloaders = downloadHandler.getDownloaders();
+        this.fileSize = downloadHandler.fileSize();
         this.executorService = Executors.newCachedThreadPool();
-        this.downloadFileHashMap = new HashMap<>();
-
-        createTempDownloadDirectory();
     }
 
-    protected void createTempDownloadDirectory() throws IOException {
+    protected Path createTempDownloadDirectory() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-        String prefix = String.format("%s_%s", filename, timeStamp);
+        String prefix = String.format("%s_%s", timeStamp, fileName);
 
-        tempDownloadFolder = Files.createTempDirectory(OctopusSettings.getTempDownloadBasepath(), prefix);
+        return Files.createDirectories(Paths.get(OctopusSettings.getTempDownloadBasepath().toString(), prefix));
     }
 
-    public String getUrl() {
+    public URL getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(URL url) {
         this.url = url;
     }
 
@@ -80,35 +108,42 @@ public class DownloadJob {
         this.baseDirectory = baseDirectory;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public ProgressReporter getProgressReporter() {
         return progressReporter;
     }
 
-    public void download() {
+    public void download() throws Exception {
+        downloaders.stream().
+                map(downloader -> executorService.submit(downloader)).forEach(future -> this.futures.add(future));
 
+        for (Future<Long> future : futures) future.get();
     }
 
     public void interruptDownload() {
         executorService.shutdownNow();
     }
 
-    public JobState getStatus() {
-        return JobState.Started;
+    public JobState getState() {
+        return state;
+    }
+
+    public long getFileSize() {
+        return fileSize;
     }
 
     @Override
     public String toString() {
         return "DownloadJob{" +
                 "url='" + url + '\'' +
-                ", filename='" + filename + '\'' +
+                ", fileName='" + fileName + '\'' +
                 ", baseDirectory=" + baseDirectory +
                 '}';
     }

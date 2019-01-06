@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,9 @@ import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
 import org.octopus.downloads.DownloadJob;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class AddNewDownloadDialog extends Dialog<DownloadJob> {
     private ButtonType downloadButtonType;
     private AddNewDownloadController controller;
@@ -61,7 +64,16 @@ public class AddNewDownloadDialog extends Dialog<DownloadJob> {
         // TODO validation
         setResultConverter(buttonType -> {
             if (buttonType == downloadButtonType) {
-                return new DownloadJob(controller.getAddress(), controller.getBaseDirectory(), controller.getName());
+                try {
+                    URL url = new URL(controller.getAddress());
+                    return new DownloadJob(url, controller.getBaseDirectory(), controller.getName());
+                } catch (MalformedURLException e) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setHeaderText("URL is not valid");
+                    alert.setContentText("The url " + controller.getAddress() + " is not a valid url");
+                    alert.showAndWait();
+                    return null;
+                }
             }
 
             return null;

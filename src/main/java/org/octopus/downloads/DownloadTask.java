@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +31,20 @@ import org.octopus.core.misc.ProgressReporter;
 public class DownloadTask extends Task<Void> {
     private ProgressReporter progressReporter;
     private int id;
-    private long maxSize;
+    private long fileSize;
     private DownloadJob downloadJob;
 
-    public DownloadTask(int id, DownloadJob job, long maxSize) {
+    public DownloadTask(int id, DownloadJob job) {
         this.id = id;
-        this.maxSize = maxSize;
         this.downloadJob = job;
         this.progressReporter = downloadJob.getProgressReporter();
+        this.fileSize = downloadJob.getFileSize();
 
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnBytesReceived,
-                evt -> updateProgress((Long) evt.getNewValue(), this.maxSize)
+                evt -> {
+                    updateProgress((Long) evt.getNewValue(), fileSize);
+                }
         );
 
         this.progressReporter.addPropertyChangeListener(
@@ -58,6 +60,7 @@ public class DownloadTask extends Task<Void> {
                     System.out.println("Download completed");
                     updateMessage("Completed");
                     updateTitle("Download completed");
+                    System.out.println("Total " + progressReporter.getReceivedBytes());
                 }
         );
     }
@@ -70,6 +73,8 @@ public class DownloadTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        System.out.println("Starting download");
+        downloadJob.prepareDownload();
         downloadJob.download();
         return null;
     }

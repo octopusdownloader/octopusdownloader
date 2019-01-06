@@ -24,37 +24,87 @@
 
 package org.octopus.downloads.handlers;
 
+import org.octopus.core.Downloader;
+import org.octopus.core.http.HTTPDownload;
 import org.octopus.core.http.HTTPInspector;
-import org.octopus.downloads.DownloadFile;
+import org.octopus.core.misc.ProgressReporter;
 import org.octopus.settings.OctopusSettings;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class HttpDownloadHandler implements DownloadHandler {
-    public static final long TEN_MB = 1024 * 10 * 10;
+    public static final long TEN_MB = 1024 * 10;
     private HTTPInspector httpInspector;
-    private int numChunks = 1;
+    private long contentLength = -1;
+    private ProgressReporter progressReporter;
+    private URL url;
+    private Path baseTempDirectory;
 
-    @Override
-    public ArrayList<DownloadFile> createFileChunks(URL url) throws Exception {
-        ArrayList<DownloadFile> downloadFiles = new ArrayList<>();
-
-        httpInspector = new HTTPInspector(url, 5000, 5);
+    public HttpDownloadHandler(URL url, ProgressReporter progressReporter) throws Exception {
+        this.progressReporter = progressReporter;
+        this.url = url;
+        httpInspector = new HTTPInspector(url, 5000, 10);
         httpInspector.inspect();
 
-        numChunks = calculateNumberOfChunks(httpInspector);
-        long contentLength = httpInspector.getContentLength();
+        this.contentLength = httpInspector.getContentLength();
+    }
 
-        if (contentLength == -1) {
-            downloadFiles.add(new DownloadFile())
+    public void setBaseTempDirectory(Path baseTempDirectory) {
+        this.baseTempDirectory = baseTempDirectory;
+    }
+
+    @Override
+    public ArrayList<Downloader> getDownloaders() {
+        ArrayList<Downloader> downloaders = new ArrayList<>();
+
+        int numChunks = calculateNumberOfChunks(httpInspector);
+        URL finalUrl = httpInspector.getFinalURL();
+
+        if (numChunks == 1) {
+            HTTPDownload download = new HTTPDownload(finalUrl, 0);
+            Path path = Paths.get(baseTempDirectory.toString(), "part0");
+            Downloader downloader = new Downloader(0, download, path, progressReporter);
+            downloaders.add(downloader);
+
+            return downloaders;
         }
 
-        return null;
+        long chunkSize = contentLength / numChunks;
+        long remaining = contentLength % numChunks;
+
+        for (int i = 0; i < numChunks; i++) {
+            long from = chunkSize * i;
+            long to = chunkSize * (i + 1) - 1;
+            if (i == numChunks - 1) to += remaining;
+            System.out.println("from :" + from + ", to: " + to);
+
+            HTTPDownload download = new HTTPDownload(finalUrl, from, to);
+            Path path = Paths.get(baseTempDirectory.toString(), String.format("part%d", i));
+            Downloader downloader = new Downloader(i, download, path, progressReporter);
+            downloaders.add(downloader);
+        }
+
+        System.out.println("downloader size " + downloaders.size());
+
+        return downloaders;
+    }
+
+    @Override
+    public String fileName() {
+        return httpInspector.getFileName();
+    }
+
+    @Override
+    public long fileSize() {
+        return 0;
     }
 
     private int calculateNumberOfChunks(HTTPInspector httpInspector) {
         long len = httpInspector.getContentLength();
+        System.out.println("Content Length " + len);
 
         if (!httpInspector.isAcceptingRanges()) return 1;
         if (httpInspector.getContentLength() == -1) return 1;
