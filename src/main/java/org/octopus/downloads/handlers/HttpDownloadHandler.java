@@ -36,12 +36,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class HttpDownloadHandler implements DownloadHandler {
-    public static final long TEN_MB = 1024 * 10;
+    public static final long TEN_MB = 1024 * 10 * 10;
     private HTTPInspector httpInspector;
     private long contentLength = -1;
     private ProgressReporter progressReporter;
     private URL url;
     private Path baseTempDirectory;
+    private ArrayList<Path> tempFilePaths = new ArrayList<>();
 
     public HttpDownloadHandler(URL url, ProgressReporter progressReporter) throws Exception {
         this.progressReporter = progressReporter;
@@ -57,6 +58,11 @@ public class HttpDownloadHandler implements DownloadHandler {
     }
 
     @Override
+    public ArrayList<Path> getTempFilePaths() {
+        return tempFilePaths;
+    }
+
+    @Override
     public ArrayList<Downloader> getDownloaders() {
         ArrayList<Downloader> downloaders = new ArrayList<>();
 
@@ -66,6 +72,7 @@ public class HttpDownloadHandler implements DownloadHandler {
         if (numChunks == 1) {
             HTTPDownload download = new HTTPDownload(finalUrl, 0);
             Path path = Paths.get(baseTempDirectory.toString(), "part0");
+            tempFilePaths.add(path);
             Downloader downloader = new Downloader(0, download, path, progressReporter);
             downloaders.add(downloader);
 
@@ -83,6 +90,7 @@ public class HttpDownloadHandler implements DownloadHandler {
 
             HTTPDownload download = new HTTPDownload(finalUrl, from, to);
             Path path = Paths.get(baseTempDirectory.toString(), String.format("part%d", i));
+            tempFilePaths.add(path);
             Downloader downloader = new Downloader(i, download, path, progressReporter);
             downloaders.add(downloader);
         }
@@ -99,7 +107,7 @@ public class HttpDownloadHandler implements DownloadHandler {
 
     @Override
     public long fileSize() {
-        return 0;
+        return contentLength;
     }
 
     private int calculateNumberOfChunks(HTTPInspector httpInspector) {
@@ -109,6 +117,8 @@ public class HttpDownloadHandler implements DownloadHandler {
         if (!httpInspector.isAcceptingRanges()) return 1;
         if (httpInspector.getContentLength() == -1) return 1;
         if (len < TEN_MB) return 1;
+        if (len < 50 * TEN_MB) return 2;
+        if (len < 100 * TEN_MB) return 4;
 
         return OctopusSettings.getMaxDownloadParts();
     }

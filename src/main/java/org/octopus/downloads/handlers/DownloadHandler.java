@@ -37,4 +37,6 @@ public interface DownloadHandler {
     String fileName();
 
     void setBaseTempDirectory(Path baseTempDirectory);
+
+    ArrayList<Path> getTempFilePaths();
 }

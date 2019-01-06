@@ -59,4 +59,11 @@ public class DownloadManager {
         DownloadTask task = taskHashMap.get(id);
         return task.cancel();
     }
+
+    public synchronized void cancelAll() {
+        for (DownloadTask t : taskHashMap.values()) {
+            t.cancel(true);
+        }
+        executorService.shutdownNow();
+    }
 }

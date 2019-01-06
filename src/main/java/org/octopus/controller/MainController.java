@@ -24,7 +24,6 @@
 
 package org.octopus.controller;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ProgressBarTableCell;
@@ -53,12 +52,14 @@ public class MainController {
         tableView.setEditable(false);
         tableView.setPlaceholder(new Label("Such empty :("));
 
-        filename.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("filename"));
+        filename.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("title"));
         status.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("message"));
         timestarted.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("timestarted"));
 
-        progress.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("progress"));
+        progress.setCellValueFactory(new PropertyValueFactory<DownloadTask, Double>("progress"));
         progress.setCellFactory(ProgressBarTableCell.<DownloadTask>forTableColumn());
+
+        timestarted.setSortType(TableColumn.SortType.ASCENDING);
     }
 
     @SuppressWarnings("unchecked")
@@ -70,10 +71,7 @@ public class MainController {
         new AddNewDownloadDialog()
                 .showAndWait()
                 .ifPresent(downloadJob -> {
-                    Platform.runLater(() -> {
                         try {
-                            downloadJob.prepareDownload();
-                            //System.out.println("Download added " + downloadJob.getFileName());
                             addDownload(DownloadManager.getInstance().addDownload(downloadJob));
                         } catch (Exception e) {
                             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -81,7 +79,6 @@ public class MainController {
                             alert.setContentText(e.getMessage());
                             alert.showAndWait();
                         }
-                    });
                 });
     }
 }

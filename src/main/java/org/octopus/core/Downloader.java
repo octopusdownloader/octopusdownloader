@@ -81,6 +81,7 @@ public class Downloader implements Callable<Long> {
             progressReporter.setReceivedBytesForTask(id, bytesReceived);
             System.out.println(id + " Interrupted");
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             progressReporter.setReceivedBytesForTask(id, bytesReceived);
             progressReporter.updateState(id, DownloadState.FAILED);
             throw e;

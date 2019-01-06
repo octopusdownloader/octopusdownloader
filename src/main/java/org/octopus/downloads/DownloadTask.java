@@ -43,9 +43,8 @@ public class DownloadTask extends Task<Void> {
         this.id = id;
         this.downloadJob = job;
         this.progressReporter = downloadJob.getProgressReporter();
-        this.fileSize = downloadJob.getFileSize();
-        this.startedTime = new Date();
 
+        this.startedTime = new Date();
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnBytesReceived,
                 evt -> {
@@ -64,9 +63,6 @@ public class DownloadTask extends Task<Void> {
                 ProgressEvent.OnDownloadComplete,
                 evt -> {
                     System.out.println("Download completed");
-                    updateMessage("Done");
-                    updateTitle("Download completed");
-                    System.out.println("Total " + progressReporter.getReceivedBytes());
                 }
         );
     }
@@ -87,8 +83,21 @@ public class DownloadTask extends Task<Void> {
 
     @Override
     protected Void call() throws Exception {
+        updateMessage("Sending GET");
+        if (!downloadJob.getFileName().isEmpty())
+            updateTitle(downloadJob.getFileName());
+        else
+            updateTitle("Getting filename from server");
+
+        downloadJob.prepareDownload();
         updateMessage("Downloading");
+        this.fileSize = downloadJob.getFileSize();
+        updateTitle(downloadJob.getFileName());
+        System.out.println("started downloading " + downloadJob.getFileName());
         downloadJob.download();
+        updateMessage("Assembling");
+        downloadJob.moveToDestination();
+        updateMessage("Completed");
         return null;
     }
 
