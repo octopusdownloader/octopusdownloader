@@ -23,6 +23,7 @@ branches:
   except:
   - gh-pages
   - docs
+
 before_deploy:
   - "./gradlew jfxNative"
 
