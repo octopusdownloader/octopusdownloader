@@ -27,19 +27,21 @@ package org.octopus.core.misc;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ProgressReporter {
     private PropertyChangeSupport propertyChangeSupport;
     private AtomicLong receivedBytes = new AtomicLong(0);
     private HashMap<Integer, DownloadState> downloadStateHashMap;
-    private HashMap<Integer, Long> downloadCompletions;
+    private ConcurrentHashMap<Integer, AtomicLong> downloadCompletions;
     private int completedDownloads = 0;
 
     public ProgressReporter() {
         propertyChangeSupport = new PropertyChangeSupport(this);
         downloadStateHashMap = new HashMap<>();
-        downloadCompletions = new HashMap<>();
+        downloadCompletions = new ConcurrentHashMap<>();
     }
 
     public void addPropertyChangeListener(ProgressEvent event, PropertyChangeListener listener) {
@@ -51,17 +53,23 @@ public class ProgressReporter {
     }
 
     public void accumulateReceivedBytes(int id, long amount) {
-        downloadCompletions.put(id, downloadCompletions.get(id) + amount);
+        downloadCompletions.putIfAbsent(id, new AtomicLong(0));
+        downloadCompletions.get(id).addAndGet(amount);
+
         Long oldVal = receivedBytes.get();
-        receivedBytes.addAndGet(amount);
-        propertyChangeSupport.firePropertyChange(ProgressEvent.OnBytesReceived.name(), oldVal, receivedBytes);
+        Long newVal = receivedBytes.addAndGet(amount);
+        propertyChangeSupport.firePropertyChange(ProgressEvent.OnBytesReceived.name(), oldVal, newVal);
+    }
+
+    public void setReceivedBytesForTask(int id, long amount) {
+        this.downloadCompletions.putIfAbsent(id, new AtomicLong(amount));
     }
 
     public void updateState(int id, DownloadState state) {
         this.propertyChangeSupport.fireIndexedPropertyChange(
                 ProgressEvent.OnStatusChanged.name(),
                 id,
-                downloadStateHashMap.getOrDefault(id, DownloadState.UNKNOWN),
+                downloadStateHashMap.getOrDefault(id, DownloadState.IN_PROGRESS),
                 state
         );
 
@@ -94,6 +102,10 @@ public class ProgressReporter {
     }
 
     public HashMap<Integer, Long> getDownloadCompletions() {
-        return downloadCompletions;
+        HashMap<Integer, Long> map = new HashMap<>();
+        for (Map.Entry<Integer, AtomicLong> entry : downloadCompletions.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().longValue());
+        }
+        return map;
     }
 }

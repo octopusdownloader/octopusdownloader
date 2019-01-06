@@ -25,31 +25,20 @@
 package org.octopus.downloads;
 
 import javafx.concurrent.Task;
-import org.octopus.core.Downloader;
 import org.octopus.core.misc.ProgressEvent;
 import org.octopus.core.misc.ProgressReporter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class DownloadTask extends Task<Void> {
-    private ExecutorService executorService;
-    private List<Future<Long>> futures;
-    private ArrayList<Downloader> downloaders;
     private ProgressReporter progressReporter;
     private int id;
     private long maxSize;
+    private DownloadJob downloadJob;
 
-    public DownloadTask(int id, ArrayList<Downloader> downloaders, ProgressReporter progressReporter, long maxSize) {
+    public DownloadTask(int id, DownloadJob job, long maxSize) {
         this.id = id;
-        this.downloaders = downloaders;
         this.maxSize = maxSize;
-        this.executorService = Executors.newCachedThreadPool();
-        this.futures = new ArrayList<>();
-        this.progressReporter = progressReporter;
+        this.downloadJob = job;
+        this.progressReporter = downloadJob.getProgressReporter();
 
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnBytesReceived,
@@ -74,15 +63,14 @@ public class DownloadTask extends Task<Void> {
     }
 
     @Override
+    protected void cancelled() {
+        super.cancelled();
+        downloadJob.interruptDownload();
+    }
+
+    @Override
     protected Void call() throws Exception {
-        for (Downloader downloader : downloaders) {
-            futures.add(executorService.submit(downloader));
-        }
-
-        for (Future f : futures) {
-
-        }
-
+        downloadJob.download();
         return null;
     }
 

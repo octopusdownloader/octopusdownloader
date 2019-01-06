@@ -25,8 +25,14 @@
 package org.octopus.downloads;
 
 import org.octopus.core.misc.ProgressReporter;
+import org.octopus.settings.OctopusSettings;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,14 +42,26 @@ public class DownloadJob {
     private Path baseDirectory;
     private ProgressReporter progressReporter;
     private ExecutorService executorService;
-    private long maxLength;
+    private long fileSize;
+    private Path tempDownloadFolder;
+    private HashMap<Integer, DownloadFile> downloadFileHashMap;
 
-    public DownloadJob(String url, Path baseDirectory, String filename) {
+    public DownloadJob(String url, Path baseDirectory, String filename) throws IOException {
         this.url = url;
         this.baseDirectory = baseDirectory;
         this.filename = filename;
         this.progressReporter = new ProgressReporter();
         this.executorService = Executors.newCachedThreadPool();
+        this.downloadFileHashMap = new HashMap<>();
+
+        createTempDownloadDirectory();
+    }
+
+    protected void createTempDownloadDirectory() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        String prefix = String.format("%s_%s", filename, timeStamp);
+
+        tempDownloadFolder = Files.createTempDirectory(OctopusSettings.getTempDownloadBasepath(), prefix);
     }
 
     public String getUrl() {
@@ -74,11 +92,16 @@ public class DownloadJob {
         return progressReporter;
     }
 
-    public ExecutorService getExecutorService() {
-        if (executorService.isShutdown())
-            this.executorService = Executors.newCachedThreadPool();
+    public void download() {
 
-        return executorService;
+    }
+
+    public void interruptDownload() {
+        executorService.shutdownNow();
+    }
+
+    public JobState getStatus() {
+        return JobState.Started;
     }
 
     @Override

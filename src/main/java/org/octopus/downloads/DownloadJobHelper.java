@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-package org.octopus.settings;
+package org.octopus.downloads;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.octopus.core.http.HTTPInspector;
+import org.octopus.exceptions.UnknownProtocolException;
 
-public class OctopusSettings {
-    public static String getUserAgent() {
-        return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+import java.net.URL;
+import java.util.ArrayList;
+
+public class DownloadJobHelper {
+
+
+    public ArrayList<DownloadFile> getDownloadFiles(URL url) throws UnknownProtocolException {
+
+
     }
 
-    public static int getDownloadBufferSize() {
-        return 10240;
+    protected ArrayList<DownloadFile> handleHttpDownloads(URL url) {
+        HTTPInspector httpInspector = new HTTPInspector(url, 5000, 5);
+
     }
 
-    public static Path getTempDownloadBasepath() {
-        return Paths.get(System.getProperty("user.home"), ".octopus", "tmp");
-    }
-
-    public static int getMaxDownloadParts() {
-        return 8;
-    }
 }

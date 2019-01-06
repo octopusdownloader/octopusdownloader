@@ -50,6 +50,7 @@ public class Downloader implements Callable<Long> {
         this.progressReporter = progressReporter;
     }
 
+    // TODO handle errors and restart downloads on demand
     public void download() throws Exception {
         try (
                 ReadableByteChannel inChan = Channels.newChannel(downloadable.getFileStream());
@@ -74,8 +75,13 @@ public class Downloader implements Callable<Long> {
 
             // this one has finished the task
             progressReporter.updateState(this.id, DownloadState.COMPLETED);
+        } catch (InterruptedException e) {
+            progressReporter.updateState(id, DownloadState.PAUSED);
+            progressReporter.setReceivedBytesForTask(id, bytesReceived);
+            System.out.println(id + " Interrupted");
         } catch (Exception e) {
-            progressReporter.updateState(this.id, DownloadState.FAILED);
+            progressReporter.setReceivedBytesForTask(id, bytesReceived);
+            progressReporter.updateState(id, DownloadState.FAILED);
             throw e;
         }
     }
