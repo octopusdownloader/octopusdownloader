@@ -24,7 +24,97 @@
 
 package org.octopus.settings;
 
-public class OctopusSettings {
+import org.octopus.alerts.CommonAlerts;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class OctopusSettings implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    //eager initialization
+    private volatile static OctopusSettings instance = new OctopusSettings();
+    private final String ROOT = System.getProperty("user.home");
+    private final String DIRECTORY = ".octopus";
+    private final String FILENAME = "setting.ser";
+    private final Path FILEPATH = Paths.get(ROOT, DIRECTORY, FILENAME);
+    private OctupusGeneralSettings generalSettings;
+    private OctupusProxySettings proxySettings;
+
+    private OctopusSettings() {
+        this.generalSettings = new OctupusGeneralSettings();
+        this.proxySettings = new OctupusProxySettings();
+        //check the file is available
+        if (!checkFileAvailability()) {
+            makedir();
+        } else {
+            //else load from the file
+            OctopusSettings settings = DeserializedFromXML(FILEPATH);
+            this.proxySettings = settings.proxySettings;
+            this.generalSettings = settings.generalSettings;
+        }
+    }
+
+    public static OctopusSettings getInstance() {
+        return instance;
+    }
+
+    public void SaveSettings() {
+        try {
+            SerializetoObject(FILEPATH);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException fileNotFound) {
+            System.out.println("ERROR: While Creating or Opening the File dvd.xml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: Saving IO Exception ");
+        }
+    }
+
+
+    private void SerializetoObject(Path path) throws NullPointerException, IOException {
+
+        ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
+        encoder.writeObject(instance.toString());
+        encoder.close();
+
+    }
+
+    private OctopusSettings DeserializedFromXML(Path path) {
+
+        OctopusSettings setting = null;
+        try {
+            ObjectInput decoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path.toString())));
+            setting = (OctopusSettings) decoder.readObject();
+            decoder.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("ERROR: File  not found");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ERROR: Classnotfound Exception");
+        } catch (IOException e) {
+            System.out.println("ERROR: Deserialize IO Exception");
+        }
+        return setting;
+    }
+
+    private boolean checkFileAvailability() {
+        Path path = Paths.get(ROOT, DIRECTORY, FILENAME);
+        return Files.exists(path);
+    }
+
+    private void makedir() {
+        Path path = Paths.get(ROOT, DIRECTORY);
+        try {
+            Files.createDirectory(path);
+        } catch (IOException e) {
+            CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "Octupus cant create the " +
+                    "directory .Octupus in " + ROOT, e);
+        }
+    }
+
     public static String getUserAgent() {
         return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
     }
@@ -32,4 +122,26 @@ public class OctopusSettings {
     public static int getDownloadBufferSize() {
         return 10240;
     }
+
+    public Object readResolve() {
+        return instance;
+    }
+
+    public OctupusGeneralSettings getGeneralSettings() {
+        return generalSettings;
+    }
+
+    public void setGeneralSettings(OctupusGeneralSettings generalSettings) {
+        this.generalSettings = generalSettings;
+    }
+
+    public OctupusProxySettings getProxySettings() {
+        return proxySettings;
+    }
+
+    public void setProxySettings(OctupusProxySettings proxySettings) {
+        this.proxySettings = proxySettings;
+    }
+
+
 }

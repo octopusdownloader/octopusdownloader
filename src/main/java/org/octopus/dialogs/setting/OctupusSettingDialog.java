@@ -32,10 +32,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
+import org.octopus.settings.OctopusSettings;
 
-public class OctupusSettingDialog extends Dialog {
+public class OctupusSettingDialog extends Dialog<OctopusSettings> {
 
     ButtonType applyButtonType;
+    ButtonType restorDefaultButtonType;
     private OctupusSettingController controller;
 
     public OctupusSettingDialog() {
@@ -48,8 +50,9 @@ public class OctupusSettingDialog extends Dialog {
             controller.setRoot((Stage) getDialogPane().getScene().getWindow());
 
             applyButtonType = new ButtonType("Apply", ButtonBar.ButtonData.OK_DONE);
+            restorDefaultButtonType = new ButtonType("Restore", ButtonBar.ButtonData.LEFT);
             ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
-            getDialogPane().getButtonTypes().addAll(applyButtonType, cancelButtonType);
+            getDialogPane().getButtonTypes().addAll(restorDefaultButtonType, applyButtonType, cancelButtonType);
             getDialogPane().setContent(root);
         } catch (Exception e) {
             Alert alert = CommonAlerts.StackTraceAlert("Error", "Something went wrong", e.getMessage(), e);
