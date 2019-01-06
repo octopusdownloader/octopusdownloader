@@ -47,12 +47,12 @@ public class DownloadManager {
         return ourInstance;
     }
 
-    public synchronized int addDownload(DownloadJob job) {
+    public synchronized DownloadTask addDownload(DownloadJob job) {
         int dloadId = downloadID.incrementAndGet();
         DownloadTask task = new DownloadTask(dloadId, job);
         taskHashMap.put(dloadId, task);
         executorService.submit(task);
-        return dloadId;
+        return task;
     }
 
     public synchronized boolean stopDownload(int id) {

@@ -24,42 +24,64 @@
 
 package org.octopus.controller;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
 import org.octopus.downloads.DownloadManager;
+import org.octopus.downloads.DownloadTask;
 
 public class MainController {
     public Button addDownloadButton;
     public TableView tableView;
+
     public TableColumn filename;
+    public TableColumn status;
+    public TableColumn progress;
+    public TableColumn timestarted;
 
     @FXML
-    @SuppressWarnings("unchecked")
     private void initialize() {
+        initializeTable();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initializeTable() {
         tableView.setEditable(false);
         tableView.setPlaceholder(new Label("Such empty :("));
 
-        filename.setCellValueFactory(new PropertyValueFactory<>("filename"));
-        System.out.println(filename);
+        filename.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("filename"));
+        status.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("message"));
+        timestarted.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("timestarted"));
+
+        progress.setCellValueFactory(new PropertyValueFactory<DownloadTask, String>("progress"));
+        progress.setCellFactory(ProgressBarTableCell.<DownloadTask>forTableColumn());
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addDownload(DownloadTask task) {
+        tableView.getItems().add(task);
     }
 
     public void openAddNewDownloadDialog(MouseEvent mouseEvent) {
         new AddNewDownloadDialog()
                 .showAndWait()
                 .ifPresent(downloadJob -> {
-                    try {
-                        downloadJob.prepareDownload();
-                        System.out.println("Download added " + downloadJob.getFileName());
-                        DownloadManager.getInstance().addDownload(downloadJob);
-                    } catch (Exception e) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setHeaderText("Error downloading file");
-                        alert.setContentText(e.getMessage());
-                        alert.showAndWait();
-                    }
+                    Platform.runLater(() -> {
+                        try {
+                            downloadJob.prepareDownload();
+                            //System.out.println("Download added " + downloadJob.getFileName());
+                            addDownload(DownloadManager.getInstance().addDownload(downloadJob));
+                        } catch (Exception e) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setHeaderText("Error downloading file");
+                            alert.setContentText(e.getMessage());
+                            alert.showAndWait();
+                        }
+                    });
                 });
     }
 }

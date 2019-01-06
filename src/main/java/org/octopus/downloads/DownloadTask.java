@@ -28,17 +28,23 @@ import javafx.concurrent.Task;
 import org.octopus.core.misc.ProgressEvent;
 import org.octopus.core.misc.ProgressReporter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DownloadTask extends Task<Void> {
     private ProgressReporter progressReporter;
     private int id;
     private long fileSize;
     private DownloadJob downloadJob;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm:ss");
+    private Date startedTime;
 
     public DownloadTask(int id, DownloadJob job) {
         this.id = id;
         this.downloadJob = job;
         this.progressReporter = downloadJob.getProgressReporter();
         this.fileSize = downloadJob.getFileSize();
+        this.startedTime = new Date();
 
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnBytesReceived,
@@ -63,6 +69,14 @@ public class DownloadTask extends Task<Void> {
                     System.out.println("Total " + progressReporter.getReceivedBytes());
                 }
         );
+    }
+
+    public String getFilename() {
+        return downloadJob.getFileName();
+    }
+
+    public String getTimestarted() {
+        return dateFormat.format(this.startedTime);
     }
 
     @Override
