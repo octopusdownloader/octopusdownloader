@@ -39,14 +39,20 @@ branches:
     - docs
 
 before_deploy:
+  - "./gradlew jfxJar"
   - "./gradlew jfxNative"
+  - "mv build/jfx/app/project-jfx.jar build/jfx/app/octopusdownloader.jar"
 
 deploy:
   - provider: releases
     api_key: $GITHUB_API_KEY
     skip_cleanup: true
+    draft: true
     file_glob: true
-    file: build/jfx/native/octopusdownloader-*.dmg
+    file:
+      - build/jfx/native/*.pkg
+      - build/jfx/native/*.dmg
+      - build/jfx/native/*.app
     on:
       condition: $TRAVIS_OS_NAME = osx
       branch: release
@@ -56,7 +62,10 @@ deploy:
     api_key: $GITHUB_API_KEY
     skip_cleanup: true
     file_glob: true
-    file: build/jfx/native/octopusdownloader-*.deb
+    file:
+      - build/jfx/app/*.jar
+      - build/jfx/native/*.deb
+    draft: true
     on:
       condition: $TRAVIS_OS_NAME = linux
       branch: release
