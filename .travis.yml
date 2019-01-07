@@ -29,8 +29,7 @@ before_deploy:
 
 deploy:
   - provider: releases
-    api_key:
-      secure: P0RrZdMXFc15trTdmPOHw9Yk14PAouc1sd9aJ2S44C27fGCg3KqOXu403EgnFQlPD3DVnIM4q1aaQoyGQOkwgEjuRZb1aq5+4bV2te5b7loyEtBnI8X8L/Qn6mxTOmq30EJKDXAUP8WfU3a5luEdSpgLP2v+QpP0sdo+gA580bqbZbMDNT3XnU8qlEMyPLmWlPr13mn9MWGmPsTKinVW4qi3yKRFzT621icgxVFn+qEwxN/buJ/T5ymQKbojwlLltWRwa92T76jg7Uutu5SO+a3qsPhjxTmWBqApBFpU4puCmmqdA2Xs9ZXY63r4Hq9mFoTo2jtgsqdZOsn5QtHdU4auyT02vXoqZDq7Cgeb/OZc7VLFN2UhxTFSIRUAc7PM4jKGCuxjHNn8uCGxsJXYAvzX97t4TBG3kOL0ljFYmJ/9b1ITvbxnaOxcDBn//qCA6zqfa++kG3kReuUxMEGcu4p0lfejeItXsrclObQRWbMM5D4ea80JkPMHFNnwLXnVtGpmNPC2OhKs/cYGdiK0VtNcvf+fMrPgBgSGRZKBEsbFUT5rp3Ao7PrImmgIXNZ6wFnaDZmMPiC9s2uYC1/VWjzIWoYR01IG6HqVdVWaKwgRTO+EzaifPSx6uvRvOUGqf0ZQ6uEfFRq2R2/TolQCtQ4v/oyVCNkZ16pA96iAxqU=
+    api_key: $GITHUB_API_KEY
     skip_cleanup: true
     file: "build/jfx/native/octopusdownloader-*.app"
     on:
@@ -39,8 +38,7 @@ deploy:
       tags: true
 
   - provider: releases
-    api_key:
-      secure: P0RrZdMXFc15trTdmPOHw9Yk14PAouc1sd9aJ2S44C27fGCg3KqOXu403EgnFQlPD3DVnIM4q1aaQoyGQOkwgEjuRZb1aq5+4bV2te5b7loyEtBnI8X8L/Qn6mxTOmq30EJKDXAUP8WfU3a5luEdSpgLP2v+QpP0sdo+gA580bqbZbMDNT3XnU8qlEMyPLmWlPr13mn9MWGmPsTKinVW4qi3yKRFzT621icgxVFn+qEwxN/buJ/T5ymQKbojwlLltWRwa92T76jg7Uutu5SO+a3qsPhjxTmWBqApBFpU4puCmmqdA2Xs9ZXY63r4Hq9mFoTo2jtgsqdZOsn5QtHdU4auyT02vXoqZDq7Cgeb/OZc7VLFN2UhxTFSIRUAc7PM4jKGCuxjHNn8uCGxsJXYAvzX97t4TBG3kOL0ljFYmJ/9b1ITvbxnaOxcDBn//qCA6zqfa++kG3kReuUxMEGcu4p0lfejeItXsrclObQRWbMM5D4ea80JkPMHFNnwLXnVtGpmNPC2OhKs/cYGdiK0VtNcvf+fMrPgBgSGRZKBEsbFUT5rp3Ao7PrImmgIXNZ6wFnaDZmMPiC9s2uYC1/VWjzIWoYR01IG6HqVdVWaKwgRTO+EzaifPSx6uvRvOUGqf0ZQ6uEfFRq2R2/TolQCtQ4v/oyVCNkZ16pA96iAxqU=
+    api_key: $GITHUB_API_KEY
     skip_cleanup: true
     file: "build/jfx/native/octopusdownloader-*.deb"
     on:
