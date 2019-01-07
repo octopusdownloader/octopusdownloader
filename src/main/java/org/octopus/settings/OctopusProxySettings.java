@@ -28,6 +28,8 @@ import java.io.Serializable;
 
 public class OctopusProxySettings implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private String host, port, proxyType;
     // class to save the current proxy settings saved in setting>proxy
 

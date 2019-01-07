@@ -33,9 +33,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class OctopusSettings implements Serializable {
+public class OctopusSettings {
 
-    private static final long serialVersionUID = 1L;
+
     //
     private static final String ROOT = System.getProperty("user.home");
     private static final String DIRECTORY = ".octopus";
@@ -106,7 +106,6 @@ public class OctopusSettings implements Serializable {
 
     @SuppressWarnings("unchecked")
     private <T> void SerializetoObject(Path path, Class<T> type, Object object) throws NullPointerException, IOException {
-        System.out.println("saving");
         ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
         encoder.writeObject(type.cast(object));
         encoder.close();

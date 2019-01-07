@@ -52,7 +52,6 @@ public class OctupusSettingUnitTest {
     @AfterClass
     public static void deleteFolder() {
         Path path = Paths.get(ROOT, DIRECTORY);
-        System.out.println("Deleting");
         try {
             Files.deleteIfExists(PROXY_FILEPATH);
             Files.deleteIfExists(path);
