@@ -2,10 +2,10 @@ build:
   verbosity: detailed
 
 build_script:
-- gradlew.bat assemble
+  - gradlew.bat assemble
 
 test_script:
-- gradlew.bat check -Dmockserver.logLevel=ERROR
+  - gradlew.bat check -Dmockserver.logLevel=ERROR
 
 branches:
   except:
