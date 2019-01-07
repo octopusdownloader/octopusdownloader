@@ -31,6 +31,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
+import org.octopus.settings.OctopusSettings;
 
 
 public class OctupusSettingController {
@@ -42,16 +43,35 @@ public class OctupusSettingController {
     public TextField socketHostText;
     public RadioButton buttonHttp;
     public RadioButton buttonSocket;
+    public OctopusSettings octopusSettings;
 
     private Stage root;
 
     @FXML
     private void initialize() {
+        octopusSettings = OctopusSettings.getInstance();
         toggleGroup = new ToggleGroup();
         buttonHttp.setToggleGroup(toggleGroup);
         buttonSocket.setToggleGroup(toggleGroup);
-        buttonHttp.setSelected(true);
 
+        //loading from config file
+        if (octopusSettings.getProxySettings().getProxyType() == null) {
+            buttonHttp.setSelected(true);
+            socketHostText.setDisable(true);
+            socketPortText.setDisable(true);
+        } else if (octopusSettings.getProxySettings().getProxyType().equals("http")) {
+            buttonHttp.setSelected(true);
+            httpHostText.setText(octopusSettings.getProxySettings().getHost());
+            httpPortText.setText(octopusSettings.getProxySettings().getPort());
+            socketHostText.setDisable(true);
+            socketPortText.setDisable(true);
+        } else {
+            buttonSocket.setSelected(true);
+            socketHostText.setText(octopusSettings.getProxySettings().getHost());
+            socketPortText.setText(octopusSettings.getProxySettings().getPort());
+            httpHostText.setDisable(false);
+            httpPortText.setDisable(false);
+        }
     }
 
 
@@ -59,17 +79,20 @@ public class OctupusSettingController {
     public void setFieldActive(ActionEvent event) {
 
         RadioButton radioButton = (RadioButton) toggleGroup.getSelectedToggle();
-        System.out.println(radioButton.getId());
         if (radioButton.getId().equals(buttonHttp.getId())) {
-            socketHostText.disableProperty();
-            socketPortText.disableProperty();
-            httpHostText.editableProperty();
-            httpPortText.editableProperty();
+            socketHostText.setDisable(true);
+            socketPortText.setDisable(true);
+//            socketPortText.clear();
+//            socketHostText.clear();
+            httpHostText.setDisable(false);
+            httpPortText.setDisable(false);
         } else {
-            socketHostText.editableProperty();
-            socketPortText.editableProperty();
-            httpHostText.disableProperty();
-            httpPortText.disableProperty();
+            socketHostText.setDisable(false);
+            socketPortText.setDisable(false);
+            httpHostText.setDisable(true);
+            httpPortText.setDisable(true);
+//            httpHostText.clear();
+//            httpPortText.clear();
         }
     }
 

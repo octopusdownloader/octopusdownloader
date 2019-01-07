@@ -26,8 +26,43 @@ package org.octopus.settings;
 
 import java.io.Serializable;
 
-public class OctupusGeneralSettings implements Serializable {
+public class OctopusProxySettings implements Serializable {
 
-    public OctupusGeneralSettings() {
+    private String host, port, proxyType;
+    // class to save the current proxy settings saved in setting>proxy
+
+    public OctopusProxySettings(String proxyType) {
+        this.host = "";
+        this.port = "";
+        proxyType = null;
     }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getProxyType() {
+        return proxyType;
+    }
+
+    public void setProxyType(String proxyType) {
+        this.proxyType = proxyType;
+    }
+
+    public Object readResolve() {
+        return this;
+    }
+
 }

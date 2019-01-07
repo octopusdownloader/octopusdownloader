@@ -24,10 +24,12 @@
 
 package org.octopus.settings;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,17 +41,20 @@ public class OctupusSettingUnitTest {
 
     private static final String ROOT = System.getProperty("user.home");
     private static final String DIRECTORY = ".octopus";
-    private static final String FILENAME = "setting.ser";
     private static final String HOST = "cachex.pdn.ac.lk";
     private static final String PORT = "3128";
-    private static final Path FILEPATH = Paths.get(ROOT, DIRECTORY, FILENAME);
+    private static final String PROXYTYPE = "http";
+    private static final String PROXY_FILENAME = "proxy_setting.ser";
+    private static final Path PROXY_FILEPATH = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+
 
     //deleting folder n setting file
     @AfterClass
     public static void deleteFolder() {
         Path path = Paths.get(ROOT, DIRECTORY);
+        System.out.println("Deleting");
         try {
-            Files.deleteIfExists(FILEPATH);
+            Files.deleteIfExists(PROXY_FILEPATH);
             Files.deleteIfExists(path);
         } catch (IOException e) {
             e.printStackTrace();
@@ -58,22 +63,37 @@ public class OctupusSettingUnitTest {
 
 
     @Test
-    public void ShouldWriteObjectFile() {
+    public void ShouldWriteProxyObjectFile() {
+        //OctopusMainSetting octopusMainSetting = new OctopusMainSetting();
         OctopusSettings octopusSettings = OctopusSettings.getInstance();
-        OctupusProxySettings proxySettings = octopusSettings.getProxySettings();
+        OctopusProxySettings proxySettings = octopusSettings.getProxySettings();
         proxySettings.setHost(HOST);
         proxySettings.setPort(PORT);
+        proxySettings.setProxyType(PROXYTYPE);
         octopusSettings.setProxySettings(proxySettings);
         octopusSettings.SaveSettings();
-        assertTrue(Files.exists(FILEPATH));
+        assertTrue(Files.exists(PROXY_FILEPATH));
+    }
+
+    @After
+    public void resetSingleton() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field instance = OctopusSettings.class.getDeclaredField("instance");
+        instance.setAccessible(true);
+        instance.set(null, null);
     }
 
     @Test
-    public void ShouldReadObject() {
+    public void ShouldReadProxyObject() {
         OctopusSettings octopusSettings = OctopusSettings.getInstance();
         assertEquals(PORT, octopusSettings.getProxySettings().getPort());
         assertEquals(HOST, octopusSettings.getProxySettings().getHost());
+        assertEquals(PROXYTYPE, octopusSettings.getProxySettings().getProxyType());
     }
 
+    @Test
+    public void HTTPProxyShouldSetNow() {
+        assertEquals(HOST, System.getProperty("http.proxyHost"));
+        assertEquals(PORT, System.getProperty("http.proxyPort"));
+    }
 
 }

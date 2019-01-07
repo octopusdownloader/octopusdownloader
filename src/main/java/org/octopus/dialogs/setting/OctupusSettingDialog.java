@@ -26,12 +26,10 @@ package org.octopus.dialogs.setting;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
+import org.octopus.settings.OctopusProxySettings;
 import org.octopus.settings.OctopusSettings;
 
 public class OctupusSettingDialog extends Dialog<OctopusSettings> {
@@ -39,11 +37,13 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
     ButtonType applyButtonType;
     ButtonType restorDefaultButtonType;
     private OctupusSettingController controller;
+    private OctopusSettings octopusSettings = OctopusSettings.getInstance();
 
     public OctupusSettingDialog() {
-        setTitle("Settings");
+        setTitle("Octopus Settings");
 
         try {
+
             FXMLLoader settingLoader = new FXMLLoader(getClass().getResource("/scenes/dialogs/setting-dialog.fxml"));
             Parent root = settingLoader.load();
             controller = settingLoader.getController();
@@ -52,6 +52,7 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
             applyButtonType = new ButtonType("Apply", ButtonBar.ButtonData.OK_DONE);
             restorDefaultButtonType = new ButtonType("Restore", ButtonBar.ButtonData.LEFT);
             ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
             getDialogPane().getButtonTypes().addAll(restorDefaultButtonType, applyButtonType, cancelButtonType);
             getDialogPane().setContent(root);
         } catch (Exception e) {
@@ -59,5 +60,39 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
             alert.showAndWait();
             System.exit(1);
         }
+
+        setResultConverter(buttonType -> {
+            if (buttonType == applyButtonType) {
+                setProxySettings(octopusSettings, true);
+            } else if (buttonType == restorDefaultButtonType) {
+                setProxySettings(octopusSettings, false);
+            } else return null;
+            return octopusSettings;
+
+        });
+    }
+
+    private void setProxySettings(OctopusSettings octopusSettings, boolean setProxy) {
+        String host, port, proxytype;
+        RadioButton radioButton = (RadioButton) controller.toggleGroup.getSelectedToggle();
+        OctopusProxySettings octopusProxySettings = octopusSettings.getProxySettings();
+        if (!setProxy) {
+            octopusProxySettings.setProxyType(null);
+            return;
+        }
+
+        if (radioButton.getId().equals(controller.buttonHttp.getId())) {
+            host = controller.httpHostText.getText();
+            port = controller.httpPortText.getText();
+            proxytype = "http";
+        } else {
+            host = controller.socketHostText.getText();
+            port = controller.socketPortText.getText();
+            proxytype = "socket";
+        }
+        octopusProxySettings.setHost(host);
+        octopusProxySettings.setPort(port);
+        octopusProxySettings.setProxyType(proxytype);
+        octopusSettings.setProxySettings(octopusProxySettings);
     }
 }

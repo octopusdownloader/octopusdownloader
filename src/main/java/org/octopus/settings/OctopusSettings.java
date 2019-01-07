@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.octopus.settings;
 
 
 import org.octopus.alerts.CommonAlerts;
+import org.octopus.core.proxy.ProxySetting;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -35,40 +36,54 @@ import java.nio.file.Paths;
 public class OctopusSettings implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private final String ROOT = System.getProperty("user.home");
-    private final String DIRECTORY = ".octopus";
-    private final String FILENAME = "setting.ser";
-    private final Path FILEPATH = Paths.get(ROOT, DIRECTORY, FILENAME);
-    private OctupusGeneralSettings generalSettings;
-    private OctupusProxySettings proxySettings;
-
-    //eager initialization
-    private volatile static OctopusSettings instance = new OctopusSettings();
+    //
+    private static final String ROOT = System.getProperty("user.home");
+    private static final String DIRECTORY = ".octopus";
+    private static final String PROXY_FILENAME = "proxy_setting.ser";
+    private static final Path PROXY_FILEPATH = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+    //null initialization
+    private static volatile OctopusSettings instance = null;
+    private OctopusGeneralSettings generalSettings;
+    private OctopusProxySettings proxySettings;
 
 
     private OctopusSettings() {
 
-        this.generalSettings = new OctupusGeneralSettings();
-        this.proxySettings = new OctupusProxySettings();
         //check the file is available
         if (!checkFileAvailability()) {
             makedir();
+            this.generalSettings = new OctopusGeneralSettings();
+            this.proxySettings = new OctopusProxySettings(null);
         } else {
-            //else load from the file
-            OctopusSettings settings = DeserializedFromXML(FILEPATH);
-            this.proxySettings = settings.proxySettings;
-            this.generalSettings = settings.generalSettings;
+            ///else load from the file
+            this.proxySettings = Deserialize(PROXY_FILEPATH, OctopusProxySettings.class);
+
+            //setting proxy
+            if (proxySettings.getProxyType() != null)
+                if (proxySettings.getProxyType().equals("http"))
+                    ProxySetting.setHttpProxy(proxySettings.getHost(), proxySettings.getPort());
+                else
+                    ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
         }
     }
 
     public static OctopusSettings getInstance() {
+        if (instance == null) {
+            instance = new OctopusSettings();
+        }
         return instance;
+
     }
 
     public void SaveSettings() {
         try {
-            SerializetoObject(FILEPATH);
+            //setting proxy setting
+            setProxySettings();
+
+            //ToDo general setting
+
+            SerializetoObject(PROXY_FILEPATH, OctopusProxySettings.class, this.proxySettings);
+
         } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (FileNotFoundException fileNotFound) {
@@ -81,43 +96,53 @@ public class OctopusSettings implements Serializable {
         }
     }
 
+    private void setProxySettings() {
+        if (proxySettings.getProxyType() == null) ProxySetting.unsetProxy();
+        else if (proxySettings.getProxyType().equals("http"))
+            ProxySetting.setHttpProxy(proxySettings.getHost(), proxySettings.getPort());
+        else ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
 
-    private void SerializetoObject(Path path) throws NullPointerException, IOException {
+    }
 
+    @SuppressWarnings("unchecked")
+    private <T> void SerializetoObject(Path path, Class<T> type, Object object) throws NullPointerException, IOException {
+        System.out.println("saving");
         ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
-        encoder.writeObject(instance.toString());
+        encoder.writeObject(type.cast(object));
         encoder.close();
 
     }
 
-    private OctopusSettings DeserializedFromXML(Path path) {
+    @SuppressWarnings("unchecked")
+    private <T> T Deserialize(Path path, Class<T> type) {
 
-        OctopusSettings setting = null;
+        T setting = null;
         try {
             ObjectInput decoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path.toString())));
-            setting = (OctopusSettings) decoder.readObject();
+            setting = (T) decoder.readObject();
             decoder.close();
         } catch (FileNotFoundException e) {
-            System.out.println("ERROR: File  not found");
+            CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "File Not Found in" +
+                    " " + path.toString(), e);
         } catch (ClassNotFoundException e) {
-            System.out.println("ERROR: Classnotfound Exception");
+            System.out.println("ERROR: Class not found Exception");
         } catch (IOException e) {
-            System.out.println("ERROR: Deserialize IO Exception");
+            CommonAlerts.StackTraceAlert("Error", "Cant Read the File", "Octupus cant read the " +
+                    "directory .Octupus in " + ROOT, e);
         }
-        return setting;
+        return type.cast(setting);
     }
 
     private boolean checkFileAvailability() {
-        Path path = Paths.get(ROOT, DIRECTORY, FILENAME);
-        System.out.println(Files.exists(path));
+        Path path = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
         return Files.exists(path);
     }
 
+    //
     private void makedir() {
         Path path = Paths.get(ROOT, DIRECTORY);
         try {
             Files.createDirectories(path);
-            System.out.println("Folders " + Files.exists(path) + " " + path.toString());
         } catch (IOException e) {
             e.printStackTrace();
             e.getMessage();
@@ -126,32 +151,36 @@ public class OctopusSettings implements Serializable {
         }
     }
 
-    public static Path getTempDownloadBasepath() {
+    public Path getTempDownloadBasepath() {
         return Paths.get(System.getProperty("user.home"), ".octopus", "tmp");
     }
 
-    public static int getMaxDownloadParts() {
+    public int getMaxDownloadParts() {
         return 8;
     }
 
-
-    public Object readResolve() {
-        return instance;
+    public int getDownloadBufferSize() {
+        return 10240;
     }
 
-    public OctupusGeneralSettings getGeneralSettings() {
+    public String getUserAgent() {
+        return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+    }
+
+
+    public OctopusGeneralSettings getGeneralSettings() {
         return generalSettings;
     }
 
-    public void setGeneralSettings(OctupusGeneralSettings generalSettings) {
+    public void setGeneralSettings(OctopusGeneralSettings generalSettings) {
         this.generalSettings = generalSettings;
     }
 
-    public OctupusProxySettings getProxySettings() {
+    public OctopusProxySettings getProxySettings() {
         return proxySettings;
     }
 
-    public void setProxySettings(OctupusProxySettings proxySettings) {
+    public void setProxySettings(OctopusProxySettings proxySettings) {
         this.proxySettings = proxySettings;
     }
 
