@@ -46,7 +46,10 @@ deploy:
     api_key: $GITHUB_API_KEY
     skip_cleanup: true
     file_glob: true
-    file: build/jfx/native/octopusdownloader-*.app
+    file:
+      - build/jfx/native/octopusdownloader-*.app
+      - build/jfx/native/octopusdownloader-*.dmg
+      - build/jfx/native/octopusdownloader-*.pkg
     on:
       condition: $TRAVIS_OS_NAME = osx
       branch: release
@@ -55,7 +58,8 @@ deploy:
   - provider: releases
     api_key: $GITHUB_API_KEY
     skip_cleanup: true
-    file: "build/jfx/native/octopusdownloader-*.deb"
+    file_glob: true
+    file: build/jfx/native/octopusdownloader-*.dmg
     on:
       condition: $TRAVIS_OS_NAME = linux
       branch: release
