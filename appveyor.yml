@@ -22,3 +22,20 @@ environment:
 
 matrix:
   fast_finish: true
+
+before_deploy:
+  - gradlew.bat jfxNative
+
+artifacts:
+  - path: build\jfx\native\*.exe
+    name: App
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: EcvZUzeHW3GeSNJRIgPmFXXKWK82LcckWy2AkCYYUJFDg2Rxcpg9VXE9UfFq6vtu
+  artifact: build\jfx\native\*.exe
+  draft: true
+  on:
+    branch: release                 # release from master branch only
+    APPVEYOR_REPO_TAG: true         # deploy on tag push only
