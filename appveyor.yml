@@ -3,10 +3,12 @@ build:
 
 build_script:
   - gradlew.bat assemble
-  - winrelease.bat
 
 test_script:
   - gradlew.bat check -Dmockserver.logLevel=ERROR
+
+after_test:
+  - winrelease.bat
 
 branches:
   except:
@@ -31,7 +33,7 @@ deploy:
   - provider: GitHub
     auth_token:
       secure: EcvZUzeHW3GeSNJRIgPmFXXKWK82LcckWy2AkCYYUJFDg2Rxcpg9VXE9UfFq6vtu
-    artifact: build\jfx\native\*.exe
+    artifact: App
     draft: true
     on:
       APPVEYOR_REPO_TAG: true
