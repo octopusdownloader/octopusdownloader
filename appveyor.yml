@@ -37,5 +37,4 @@ deploy:
   artifact: build\jfx\native\*.exe
   draft: true
   on:
-    branch: release                 # release from master branch only
-    APPVEYOR_REPO_TAG: true         # deploy on tag push only
+    APPVEYOR_REPO_TAG: true
