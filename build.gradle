@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -96,6 +96,8 @@ jfx {
 
     // minimal requirement for jfxNative-task
     vendor = 'Octopus Org.'
+
+    appName = 'OctopusDownloader'
 }
 
 check.dependsOn jacocoTestReport
