@@ -48,7 +48,9 @@ deploy:
     draft: true
     file_glob: true
     file:
-      - build/jfx/native/octopusdownloader-*.pkg
+      - build/jfx/native/OctopusDownloader-*.pkg
+      - build/jfx/native/OctopusDownloader-*.dmg
+      - build/jfx/native/OctopusDownloader-*.app
     on:
       condition: $TRAVIS_OS_NAME = osx
       branch: release
@@ -58,7 +60,7 @@ deploy:
     api_key: $GITHUB_API_KEY
     skip_cleanup: true
     file_glob: true
-    file: build/jfx/native/octopusdownloader-*.deb
+    file: build/jfx/native/OctopusDownloader-*.deb
     draft: true
     on:
       condition: $TRAVIS_OS_NAME = linux

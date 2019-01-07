@@ -88,6 +88,8 @@ jfx {
 
     // minimal requirement for jfxNative-task
     vendor = 'Octopus Org.'
+
+    appName = 'OctopusDownloader'
 }
 
 check.dependsOn jacocoTestReport
