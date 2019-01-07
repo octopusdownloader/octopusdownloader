@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,7 @@ public class HTTPInspector {
 
     private HttpURLConnection getConnection(URL url) throws IOException {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.setRequestProperty("User-Agent", OctopusSettings.getUserAgent());
+        urlConnection.setRequestProperty("User-Agent", OctopusSettings.getInstance().getUserAgent());
         urlConnection.setConnectTimeout(timeout);
         urlConnection.setInstanceFollowRedirects(false);
         urlConnection.connect();

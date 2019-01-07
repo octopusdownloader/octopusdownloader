@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2019 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +30,10 @@ import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
+import org.octopus.dialogs.setting.OctupusSettingDialog;
 import org.octopus.downloads.DownloadManager;
 import org.octopus.downloads.DownloadTask;
-import org.octopus.dialogs.setting.OctupusSettingDialog;
+import org.octopus.settings.OctopusSettings;
 
 public class MainController {
     public Button addDownloadButton;
@@ -73,19 +74,20 @@ public class MainController {
         new AddNewDownloadDialog()
                 .showAndWait()
                 .ifPresent(downloadJob -> {
-                        try {
-                            addDownload(DownloadManager.getInstance().addDownload(downloadJob));
-                        } catch (Exception e) {
-                            Alert alert = new Alert(Alert.AlertType.ERROR);
-                            alert.setHeaderText("Error downloading file");
-                            alert.setContentText(e.getMessage());
-                            alert.showAndWait();
-                        }
+                    try {
+                        addDownload(DownloadManager.getInstance().addDownload(downloadJob));
+                    } catch (Exception e) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setHeaderText("Error downloading file");
+                        alert.setContentText(e.getMessage());
+                        alert.showAndWait();
+                    }
                 });
     }
 
     public void openSettingDialog(MouseEvent mouseEvent) {
         new OctupusSettingDialog()
-                .showAndWait();
+                .showAndWait()
+                .ifPresent(OctopusSettings::SaveSettings);
     }
 }

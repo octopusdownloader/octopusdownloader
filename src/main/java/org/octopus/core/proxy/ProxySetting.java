@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ package org.octopus.core.proxy;
 
 public class ProxySetting {
 
+
     /**
      *
      * @param host = proxy host address
@@ -41,13 +42,14 @@ public class ProxySetting {
     }
 
     public static void setSocketProxy(String host, String port) {
-        // socket proxy
+
         System.setProperty("socksProxyHost", host);
         System.setProperty("socksProxyPort", port);
     }
 
 
     public static void unsetProxy() {
+
         System.clearProperty("http.proxyHost");
         System.clearProperty("http.proxyPort");
         System.clearProperty("https.proxyHost");

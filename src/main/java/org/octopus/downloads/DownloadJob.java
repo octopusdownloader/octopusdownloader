@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2019 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -89,7 +89,7 @@ public class DownloadJob {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         String prefix = String.format("%s_%s", timeStamp, fileName);
 
-        return Files.createDirectories(Paths.get(OctopusSettings.getTempDownloadBasepath().toString(), prefix));
+        return Files.createDirectories(Paths.get(OctopusSettings.getInstance().getTempDownloadBasepath().toString(), prefix));
     }
 
     public URL getUrl() {
