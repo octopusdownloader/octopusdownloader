@@ -1,7 +1,7 @@
 # octopusdownloader
 
 [![Build Status](https://travis-ci.com/octopusdownloader/octopusdownloader.svg?branch=master)](https://travis-ci.com/octopusdownloader/octopusdownloader) [![Build status](https://ci.appveyor.com/api/projects/status/ebu18r8r4rmtcj7k?svg=true)](https://ci.appveyor.com/project/kasvith/octopusdownloader)
- [![codecov](https://codecov.io/gh/octopusdownloader/octopusdownloader/branch/master/graph/badge.svg)](https://codecov.io/gh/octopusdownloader/octopusdownloader)
+ [![codecov](https://codecov.io/gh/octopusdownloader/octopusdownloader/branch/master/graph/badge.svg)](https://codecov.io/gh/octopusdownloader/octopusdownloader) [![HitCount](http://hits.dwyl.io/octopusdownloader/octopusdownloader/octopusdownloader.svg)](http://hits.dwyl.io/octopusdownloader/octopusdownloader/octopusdownloader)
 
 <p align="center"><img src="https://user-images.githubusercontent.com/13379595/47604595-9b56e180-da19-11e8-93cf-a4174fa0ad38.png" height="400" /></p>
 
