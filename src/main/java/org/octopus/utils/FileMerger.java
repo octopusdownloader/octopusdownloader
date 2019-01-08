@@ -2,7 +2,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018 by octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,6 +55,8 @@ public class FileMerger {
                 }
             }
             sourceFile.close();
+            //deleting temp file after merging
+            Files.deleteIfExists(paths.get(i).toAbsolutePath());
         }
         finalFile.close();
     }
