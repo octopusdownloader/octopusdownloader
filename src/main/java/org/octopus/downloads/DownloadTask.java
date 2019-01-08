@@ -62,7 +62,17 @@ public class DownloadTask extends Task<Void> {
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnDownloadComplete,
                 evt -> {
+                    updateProgress(1, 1);
                     System.out.println("Download completed");
+                }
+        );
+
+        this.progressReporter.addPropertyChangeListener(
+                ProgressEvent.OnDownloadFail,
+                evt -> {
+                    updateMessage("Failed");
+                    updateProgress(0, 1);
+                    System.out.println("Download failed");
                 }
         );
     }

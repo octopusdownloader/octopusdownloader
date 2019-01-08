@@ -28,4 +28,5 @@ public enum ProgressEvent {
     OnBytesReceived,
     OnStatusChanged,
     OnDownloadComplete,
+    OnDownloadFail,
 }

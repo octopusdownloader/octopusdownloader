@@ -36,6 +36,7 @@ public class HTTPDownload implements Downloadable {
     private long to;
 
     public HTTPDownload(URL url, long from, long to) {
+        System.out.println("I download " + url);
         this.url = url;
         this.from = from;
         this.to = to;

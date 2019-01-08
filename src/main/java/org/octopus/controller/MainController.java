@@ -54,6 +54,8 @@ public class MainController {
     @FXML
     private void initialize() {
         initializeTable();
+        //initializing the setting instance
+        OctopusSettings.getInstance();
     }
 
     @SuppressWarnings("unchecked")
