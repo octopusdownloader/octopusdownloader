@@ -46,7 +46,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                   <Button mnemonicParsing="false" fx:id="startDownloadButton" disable="true">
+                   <Button fx:id="startDownloadButton" disable="true" mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -55,7 +55,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                   <Button mnemonicParsing="false" fx:id="stopDownloadButton" disable="true" prefHeight="48.0"
+                   <Button fx:id="stopDownloadButton" disable="true" mnemonicParsing="false" prefHeight="48.0"
                            prefWidth="48.0">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
@@ -65,7 +65,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                   <Button mnemonicParsing="false" fx:id="cancelDownloadButton" disable="true">
+                   <Button fx:id="cancelDownloadButton" disable="true" mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -75,7 +75,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL"/>
-                   <Button mnemonicParsing="false" fx:id="downloadInfoButton" disable="true">
+                   <Button fx:id="downloadInfoButton" disable="true" mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -84,7 +84,8 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                   <Button mnemonicParsing="false" fx:id="deleteDownloadButton" disable="true">
+                   <Button fx:id="deleteDownloadButton" disable="true" mnemonicParsing="false"
+                           onMouseClicked="#onDelete">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -94,7 +95,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL" prefHeight="200.0"/>
-                   <Button fx:id="settingButton" onMouseClicked="#openSettingDialog" mnemonicParsing="false">
+                   <Button fx:id="settingButton" mnemonicParsing="false" onMouseClicked="#openSettingDialog">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>

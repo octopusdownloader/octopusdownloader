@@ -1,8 +1,8 @@
 
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,16 @@
 
 package org.octopus.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class FileMerger {
+public class FileUtils {
     final static int INDEX = 0;
 
     public static void AppendFiles(ArrayList<Path> paths) throws IOException, NullPointerException {
@@ -59,5 +61,12 @@ public class FileMerger {
             Files.deleteIfExists(paths.get(i).toAbsolutePath());
         }
         finalFile.close();
+    }
+
+    public static final void deleteDirectory(Path path) throws IOException {
+        Files.walk(path)
+                .sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
     }
 }

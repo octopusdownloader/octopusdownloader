@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,9 +37,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class FileMergerUnitTest {
+public class FileUtilsUnitTest {
     @ClassRule
     public static TemporaryFolder tmpFolder = new TemporaryFolder();
     private static ArrayList<Path> paths;
@@ -66,7 +67,7 @@ public class FileMergerUnitTest {
             int byteRead = 0, i = 0;
 
             while ((byteRead = bufferedInputStream.read(buffer)) > 0) {
-                Path newPath = Paths.get(tmpFolder.getRoot().getCanonicalPath(), String.valueOf(i++) + ".part");
+                Path newPath = Paths.get(tmpFolder.getRoot().getCanonicalPath(), i++ + ".part");
                 paths.add(newPath);
                 File newFile = new File(newPath.toString());
                 outputStream = new FileOutputStream(newFile);
@@ -88,7 +89,7 @@ public class FileMergerUnitTest {
     @Test()
     public void stage1_shouldAppendFilesTest() {
         try {
-            FileMerger.AppendFiles(paths);
+            FileUtils.AppendFiles(paths);
             HashCode appendFilesCode = com.google.common.io.Files.asByteSource(paths.get(0).toFile()).hash(Hashing.md5());
             assertEquals(checksum, appendFilesCode);
         } catch (IOException e) {
@@ -99,7 +100,7 @@ public class FileMergerUnitTest {
     @Test(expected = IOException.class)
     public void stage2_shouldnotAppendWhenFilesNotExist() throws IOException {
         paths.add(Paths.get(tmpFolder.getRoot().getCanonicalPath(), "5.part"));
-        FileMerger.AppendFiles(paths);
+        FileUtils.AppendFiles(paths);
     }
 
     //ToDO change this test as previous test delete the .part files after append
@@ -114,8 +115,39 @@ public class FileMergerUnitTest {
 //        outputStream.write(bytes);
 //        outputStream.flush();
 //        outputStream.close();
-//        FileMerger.AppendFiles(paths);
+//        FileUtils.AppendFiles(paths);
 //        HashCode appendFilesCode = com.google.common.io.Files.asByteSource(paths.get(0).toFile()).hash(Hashing.md5());
 //        assertNotEquals(appendFilesCode, checksum);
 //    }
+
+    @Test
+    public void shouldDeleteEmptyDirectory() {
+        try {
+            Path tempDir = tmpFolder.newFolder().toPath();
+            FileUtils.deleteDirectory(tempDir);
+            assertFalse(Files.exists(tempDir));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void shouldDeleteDirectoryWithFiles() {
+        try {
+            File tempDir = tmpFolder.newFolder("a", "b", "c");
+            Path tempPath = tempDir.toPath();
+            File file1 = new File(tempDir.getAbsolutePath(), "child");
+            file1.createNewFile();
+
+            FileUtils.deleteDirectory(tempPath);
+            assertFalse(Files.exists(tempPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test(expected = IOException.class)
+    public void shouldThrowExceptionWhenFolderNotFound() throws IOException {
+        FileUtils.deleteDirectory(Paths.get("unknownpath"));
+    }
 }

@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,10 @@ package org.octopus.downloads;
 
 public enum JobState {
     Started,
-    Stopped,
+    Downloading,
+    Cancelled,
+    Paused,
+    Assembling,
     Completed,
-    Error
+    Failed,
 }

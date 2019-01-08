@@ -51,6 +51,8 @@ public class MainController {
     public Button downloadInfoButton;
     public Button deleteDownloadButton;
 
+    private DownloadTask selectedTask = null;
+
     @FXML
     private void initialize() {
         initializeTable();
@@ -73,12 +75,58 @@ public class MainController {
         timestarted.setSortType(TableColumn.SortType.ASCENDING);
 
         tableView.setOnMouseClicked(event -> {
-
+            selectedTask = (DownloadTask) tableView.getSelectionModel().getSelectedItem();
+            if (selectedTask != null) {
+                controlToolbarVisibility(selectedTask);
+            }
         });
     }
 
     private void controlToolbarVisibility(DownloadTask task) {
+        switch (task.getJobState()) {
+            case Paused:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(false);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(false);
+                startDownloadButton.setDisable(false); //start
+                break;
 
+            case Failed:
+            case Cancelled:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+
+            case Assembling:
+            case Completed:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+
+            case Started:
+            case Downloading:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(false);
+                deleteDownloadButton.setDisable(true);
+                stopDownloadButton.setDisable(false);
+                startDownloadButton.setDisable(false);
+                break;
+
+            default:
+                downloadInfoButton.setDisable(true);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(true);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -105,5 +153,13 @@ public class MainController {
         new OctupusSettingDialog()
                 .showAndWait()
                 .ifPresent(OctopusSettings::SaveSettings);
+    }
+
+    public void onDelete(MouseEvent mouseEvent) {
+        if (selectedTask == null) return;
+
+        selectedTask.getDownloadJob().deleteDownload();
+        tableView.getItems().remove(selectedTask);
+        selectedTask = null;
     }
 }
