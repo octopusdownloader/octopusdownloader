@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.octopus.downloads.DownloadManager;
 
 import java.io.IOException;
 
@@ -45,5 +46,28 @@ public class Main extends Application {
         Scene scene = new Scene(root, 900, 500);
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        registerShutdownHook();
+    }
+
+    @Override
+    public void stop() {
+        try {
+            DownloadManager.getInstance().cancelAll();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    private void registerShutdownHook() {
+        System.out.println("Registering shutdown hooks");
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Shutdown hook triggered");
+                DownloadManager.getInstance().cancelAll();
+            }
+        });
     }
 }
