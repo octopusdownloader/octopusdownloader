@@ -60,10 +60,11 @@ public class OctopusSettings {
 
             //setting proxy
             if (proxySettings.getProxyType() != null)
-                if (proxySettings.getProxyType().equals("http"))
+                if (proxySettings.getProxyType().equals("http")) {
                     ProxySetting.setHttpProxy(proxySettings.getHost(), proxySettings.getPort());
-                else
+                } else {
                     ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
+                }
         }
     }
 
