@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2019 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,11 +32,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DownloadTask extends Task<Void> {
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm:ss");
     private ProgressReporter progressReporter;
     private int id;
     private long fileSize;
     private DownloadJob downloadJob;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm:ss");
     private Date startedTime;
 
     public DownloadTask(int id, DownloadJob job) {

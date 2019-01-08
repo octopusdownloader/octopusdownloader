@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2019 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -120,6 +120,6 @@ public class HttpDownloadHandler implements DownloadHandler {
         if (len < 50 * TEN_MB) return 2;
         if (len < 100 * TEN_MB) return 4;
 
-        return OctopusSettings.getMaxDownloadParts();
+        return OctopusSettings.getInstance().getMaxDownloadParts();
     }
 }

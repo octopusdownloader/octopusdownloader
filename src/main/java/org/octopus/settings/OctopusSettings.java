@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * The MIT License (MIT)
  *
- * Copyright (c) 2018 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,23 +24,164 @@
 
 package org.octopus.settings;
 
+
+import org.octopus.alerts.CommonAlerts;
+import org.octopus.core.proxy.ProxySetting;
+
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class OctopusSettings {
-    public static String getUserAgent() {
-        return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+
+
+    //
+    private static final String ROOT = System.getProperty("user.home");
+    private static final String DIRECTORY = ".octopus";
+    private static final String PROXY_FILENAME = "proxy_setting.ser";
+    private static final Path PROXY_FILEPATH = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+    //null initialization
+    private static volatile OctopusSettings instance = null;
+    private OctopusGeneralSettings generalSettings;
+    private OctopusProxySettings proxySettings;
+
+
+    private OctopusSettings() {
+
+        //check the file is available
+        if (!checkFileAvailability()) {
+            makedir();
+            this.generalSettings = new OctopusGeneralSettings();
+            this.proxySettings = new OctopusProxySettings(null);
+        } else {
+            ///else load from the file
+            this.proxySettings = Deserialize(PROXY_FILEPATH, OctopusProxySettings.class);
+
+            //setting proxy
+            if (proxySettings.getProxyType() != null)
+                if (proxySettings.getProxyType().equals("http"))
+                    ProxySetting.setHttpProxy(proxySettings.getHost(), proxySettings.getPort());
+                else
+                    ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
+        }
     }
 
-    public static int getDownloadBufferSize() {
-        return 10240;
+    public static OctopusSettings getInstance() {
+        if (instance == null) {
+            instance = new OctopusSettings();
+        }
+        return instance;
+
     }
 
-    public static Path getTempDownloadBasepath() {
+    public void SaveSettings() {
+        try {
+            //setting proxy setting
+            setProxySettings();
+
+            //ToDo general setting
+
+            SerializetoObject(PROXY_FILEPATH, OctopusProxySettings.class, this.proxySettings);
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException fileNotFound) {
+            fileNotFound.getMessage();
+            fileNotFound.printStackTrace();
+            System.out.println("ERROR: While Creating or Opening the File");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: Saving IO Exception ");
+        }
+    }
+
+    private void setProxySettings() {
+        if (proxySettings.getProxyType() == null) ProxySetting.unsetProxy();
+        else if (proxySettings.getProxyType().equals("http"))
+            ProxySetting.setHttpProxy(proxySettings.getHost(), proxySettings.getPort());
+        else ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void SerializetoObject(Path path, Class<T> type, Object object) throws NullPointerException, IOException {
+        ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
+        encoder.writeObject(type.cast(object));
+        encoder.close();
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T Deserialize(Path path, Class<T> type) {
+
+        T setting = null;
+        try {
+            ObjectInput decoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path.toString())));
+            setting = (T) decoder.readObject();
+            decoder.close();
+        } catch (FileNotFoundException e) {
+            CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "File Not Found in" +
+                    " " + path.toString(), e);
+        } catch (ClassNotFoundException e) {
+            System.out.println("ERROR: Class not found Exception");
+        } catch (IOException e) {
+            CommonAlerts.StackTraceAlert("Error", "Cant Read the File", "Octupus cant read the " +
+                    "directory .Octupus in " + ROOT, e);
+        }
+        return type.cast(setting);
+    }
+
+    private boolean checkFileAvailability() {
+        Path path = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+        return Files.exists(path);
+    }
+
+    //
+    private void makedir() {
+        Path path = Paths.get(ROOT, DIRECTORY);
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            e.getMessage();
+            CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "Octupus cant create the " +
+                    "directory .Octupus in " + ROOT, e);
+        }
+    }
+
+    public Path getTempDownloadBasepath() {
         return Paths.get(System.getProperty("user.home"), ".octopus", "tmp");
     }
 
-    public static int getMaxDownloadParts() {
+    public int getMaxDownloadParts() {
         return 8;
     }
+
+    public int getDownloadBufferSize() {
+        return 10240;
+    }
+
+    public String getUserAgent() {
+        return "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36";
+    }
+
+
+    public OctopusGeneralSettings getGeneralSettings() {
+        return generalSettings;
+    }
+
+    public void setGeneralSettings(OctopusGeneralSettings generalSettings) {
+        this.generalSettings = generalSettings;
+    }
+
+    public OctopusProxySettings getProxySettings() {
+        return proxySettings;
+    }
+
+    public void setProxySettings(OctopusProxySettings proxySettings) {
+        this.proxySettings = proxySettings;
+    }
+
+
 }

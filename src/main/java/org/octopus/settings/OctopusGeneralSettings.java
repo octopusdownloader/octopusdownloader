@@ -22,39 +22,14 @@
  * SOFTWARE.
  */
 
-package org.octopus.core.proxy;
+package org.octopus.settings;
 
-public class ProxySetting {
+import java.io.Serializable;
 
+public class OctopusGeneralSettings implements Serializable {
 
-    /**
-     *
-     * @param host = proxy host address
-     * @param port = proxy port number
-     *
-     */
-    public static void setHttpProxy(String host, String port) {
+    private static final long serialVersionUID = 1L;
 
-        System.setProperty("http.proxyHost", host);
-        System.setProperty("http.proxyPort", port);
-        System.setProperty("https.proxyHost", host);
-        System.setProperty("https.proxyPort", port);
-    }
-
-    public static void setSocketProxy(String host, String port) {
-
-        System.setProperty("socksProxyHost", host);
-        System.setProperty("socksProxyPort", port);
-    }
-
-
-    public static void unsetProxy() {
-
-        System.clearProperty("http.proxyHost");
-        System.clearProperty("http.proxyPort");
-        System.clearProperty("https.proxyHost");
-        System.clearProperty("https.proxyPort");
-        System.clearProperty("socksProxyHost");
-        System.clearProperty("socksProxyPort");
+    public OctopusGeneralSettings() {
     }
 }
