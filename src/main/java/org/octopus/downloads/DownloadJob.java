@@ -135,7 +135,8 @@ public class DownloadJob {
     }
 
     public void interruptDownload() {
-        executorService.shutdownNow();
+        if (!executorService.isTerminated())
+            executorService.shutdownNow();
     }
 
     public JobState getState() {

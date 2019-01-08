@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ public class DownloadManager {
     private AtomicInteger downloadID = new AtomicInteger(0);
     private HashMap<Integer, DownloadTask> taskHashMap;
     private ExecutorService executorService;
+    private boolean isShutdown = false;
 
     private DownloadManager() {
         taskHashMap = new HashMap<>();
@@ -61,9 +62,9 @@ public class DownloadManager {
     }
 
     public synchronized void cancelAll() {
-        for (DownloadTask t : taskHashMap.values()) {
-            t.cancel(true);
-        }
+        //if (isShutdown) return;
+        System.out.println("Shutting down Octopus");
         executorService.shutdownNow();
+        isShutdown = true;
     }
 }
