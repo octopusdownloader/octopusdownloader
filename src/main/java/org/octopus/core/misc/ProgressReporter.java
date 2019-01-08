@@ -76,11 +76,21 @@ public class ProgressReporter {
 
         if (isDownloadCompleted())
             propertyChangeSupport.firePropertyChange(ProgressEvent.OnDownloadComplete.name(), false, true);
+
+        if (isAllFailed())
+            propertyChangeSupport.firePropertyChange(ProgressEvent.OnDownloadFail.name(), false, true);
     }
 
     private boolean isDownloadCompleted() {
         for (DownloadState state : downloadStateHashMap.values()) {
             if (state != DownloadState.COMPLETED) return false;
+        }
+        return true;
+    }
+
+    private boolean isAllFailed() {
+        for (DownloadState state : downloadStateHashMap.values()) {
+            if (state != DownloadState.FAILED) return false;
         }
         return true;
     }

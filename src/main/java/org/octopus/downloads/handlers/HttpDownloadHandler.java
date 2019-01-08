@@ -69,6 +69,12 @@ public class HttpDownloadHandler implements DownloadHandler {
         int numChunks = calculateNumberOfChunks(httpInspector);
         URL finalUrl = httpInspector.getFinalURL();
 
+        try {
+            finalUrl = new URL(finalUrl.toString().replaceAll(" ", "%20"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         if (numChunks == 1) {
             HTTPDownload download = new HTTPDownload(finalUrl, 0);
             Path path = Paths.get(baseTempDirectory.toString(), "part0");
