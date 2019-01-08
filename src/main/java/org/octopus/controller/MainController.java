@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,12 @@ public class MainController {
     public TableColumn timestarted;
 
     public Button settingButton;
+    public Button startDownloadButton;
+    public Button stopDownloadButton;
+    public Button cancelDownloadButton;
+    public Button downloadInfoButton;
+    public Button deleteDownloadButton;
+
     @FXML
     private void initialize() {
         initializeTable();
@@ -63,6 +69,14 @@ public class MainController {
         progress.setCellFactory(ProgressBarTableCell.<DownloadTask>forTableColumn());
 
         timestarted.setSortType(TableColumn.SortType.ASCENDING);
+
+        tableView.setOnMouseClicked(event -> {
+
+        });
+    }
+
+    private void controlToolbarVisibility(DownloadTask task) {
+
     }
 
     @SuppressWarnings("unchecked")
