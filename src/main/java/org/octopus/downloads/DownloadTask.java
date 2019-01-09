@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ public class DownloadTask extends Task<Void> {
     private long fileSize;
     private DownloadJob downloadJob;
     private Date startedTime;
+    private JobState jobState;
 
     public DownloadTask(int id, DownloadJob job) {
         this.id = id;
@@ -62,6 +63,7 @@ public class DownloadTask extends Task<Void> {
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnDownloadComplete,
                 evt -> {
+                    updateJobState(JobState.Assembling);
                     updateProgress(1, 1);
                     System.out.println("Download completed");
                 }
@@ -70,7 +72,7 @@ public class DownloadTask extends Task<Void> {
         this.progressReporter.addPropertyChangeListener(
                 ProgressEvent.OnDownloadFail,
                 evt -> {
-                    updateMessage("Failed");
+                    updateJobState(JobState.Failed);
                     updateProgress(0, 1);
                     System.out.println("Download failed");
                 }
@@ -85,29 +87,45 @@ public class DownloadTask extends Task<Void> {
         return dateFormat.format(this.startedTime);
     }
 
+    public JobState getJobState() {
+        return jobState;
+    }
+
+    private void updateJobState(JobState jobState) {
+        if (this.jobState == jobState) return;
+
+        this.jobState = jobState;
+        updateMessage(jobState.toString());
+    }
+
+    public DownloadJob getDownloadJob() {
+        return downloadJob;
+    }
+
     @Override
     protected void cancelled() {
         super.cancelled();
+        updateJobState(JobState.Cancelled);
         downloadJob.interruptDownload();
     }
 
     @Override
     protected Void call() throws Exception {
-        updateMessage("Sending GET");
+        updateJobState(JobState.Started);
         if (!downloadJob.getFileName().isEmpty())
             updateTitle(downloadJob.getFileName());
         else
             updateTitle("Getting filename from server");
 
         downloadJob.prepareDownload();
-        updateMessage("Downloading");
+        updateJobState(JobState.Downloading);
         this.fileSize = downloadJob.getFileSize();
         updateTitle(downloadJob.getFileName());
         System.out.println("started downloading " + downloadJob.getFileName());
         downloadJob.download();
-        updateMessage("Assembling");
+        updateJobState(JobState.Assembling);
         downloadJob.moveToDestination();
-        updateMessage("Completed");
+        updateJobState(JobState.Completed);
         return null;
     }
 

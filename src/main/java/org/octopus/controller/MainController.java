@@ -1,7 +1,7 @@
 /*
- * The MIT License (MIT)
+ * MIT License
  *
- * Copyright (c) 2019 by octopusdownloader
+ * Copyright (c) 2019 octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,6 +45,14 @@ public class MainController {
     public TableColumn timestarted;
 
     public Button settingButton;
+    public Button startDownloadButton;
+    public Button stopDownloadButton;
+    public Button cancelDownloadButton;
+    public Button downloadInfoButton;
+    public Button deleteDownloadButton;
+
+    private DownloadTask selectedTask = null;
+
     @FXML
     private void initialize() {
         initializeTable();
@@ -65,6 +73,60 @@ public class MainController {
         progress.setCellFactory(ProgressBarTableCell.<DownloadTask>forTableColumn());
 
         timestarted.setSortType(TableColumn.SortType.ASCENDING);
+
+        tableView.setOnMouseClicked(event -> {
+            selectedTask = (DownloadTask) tableView.getSelectionModel().getSelectedItem();
+            if (selectedTask != null) {
+                controlToolbarVisibility(selectedTask);
+            }
+        });
+    }
+
+    private void controlToolbarVisibility(DownloadTask task) {
+        switch (task.getJobState()) {
+            case Paused:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(false);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(false);
+                startDownloadButton.setDisable(false); //start
+                break;
+
+            case Failed:
+            case Cancelled:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+
+            case Assembling:
+            case Completed:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(false);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+
+            case Started:
+            case Downloading:
+                downloadInfoButton.setDisable(false);
+                cancelDownloadButton.setDisable(false);
+                deleteDownloadButton.setDisable(true);
+                stopDownloadButton.setDisable(false);
+                startDownloadButton.setDisable(false);
+                break;
+
+            default:
+                downloadInfoButton.setDisable(true);
+                cancelDownloadButton.setDisable(true);
+                deleteDownloadButton.setDisable(true);
+                stopDownloadButton.setDisable(true);
+                startDownloadButton.setDisable(true);
+                break;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -91,5 +153,13 @@ public class MainController {
         new OctupusSettingDialog()
                 .showAndWait()
                 .ifPresent(OctopusSettings::SaveSettings);
+    }
+
+    public void onDelete(MouseEvent mouseEvent) {
+        if (selectedTask == null) return;
+
+        selectedTask.getDownloadJob().deleteDownload();
+        tableView.getItems().remove(selectedTask);
+        selectedTask = null;
     }
 }

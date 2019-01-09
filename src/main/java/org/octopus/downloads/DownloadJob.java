@@ -30,7 +30,7 @@ import org.octopus.downloads.handlers.DownloadHandler;
 import org.octopus.downloads.handlers.HttpDownloadHandler;
 import org.octopus.exceptions.UnknownProtocolException;
 import org.octopus.settings.OctopusSettings;
-import org.octopus.utils.FileMerger;
+import org.octopus.utils.FileUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -139,10 +139,6 @@ public class DownloadJob {
             executorService.shutdownNow();
     }
 
-    public JobState getState() {
-        return state;
-    }
-
     public long getFileSize() {
         return fileSize;
     }
@@ -151,11 +147,24 @@ public class DownloadJob {
         ArrayList<Path> paths = downloadHandler.getTempFilePaths();
         Files.createDirectories(baseDirectory);
         if (paths.size() > 1) {
-            FileMerger.AppendFiles(paths);
+            FileUtils.AppendFiles(paths);
         }
 
-
         Files.move(paths.get(0), Paths.get(baseDirectory.toString(), fileName));
+    }
+
+    public void deleteDownload() {
+        try {
+            FileUtils.deleteDirectory(tempDownloadFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Files.delete(Paths.get(baseDirectory.toString(), fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
