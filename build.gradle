@@ -23,7 +23,7 @@
  */
 
 group 'octopusdownloader'
-version '1.0-SNAPSHOT'
+version '1.0.1'
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
@@ -61,22 +61,14 @@ dependencies {
 }
 
 test{
-
     systemProperties System.properties
-    systemProperty "user.home" , "octopusTest"
+    systemProperty "user.home" , ".octopusTestHome"
     useJUnit{
         filter{
             include '**/*TestSuite.class'
             include '**/*UnitTest.class'
         }
     }
-
-
-        // Assign all Java system properties from
-        // the command line to the JavaExec task.
-
-    //systemProperties(System.getProperties())
-    //tasks.withType(Test) { systemProperty 'user.home', System.getProperty("user.home") }
 }
 
 subprojects {
@@ -98,6 +90,8 @@ jfx {
     vendor = 'Octopus Org.'
 
     appName = 'OctopusDownloader'
+
+    nativeReleaseVersion = version
 }
 
 check.dependsOn jacocoTestReport
