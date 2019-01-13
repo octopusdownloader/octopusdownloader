@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ The MIT License (MIT)
+  ~ MIT License (MIT)
   ~
   ~ Copyright (c) 2019 by octopusdownloader
   ~
@@ -24,8 +24,12 @@
   ~ SOFTWARE.
   -->
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
             minWidth="-Infinity" prefHeight="476.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
             fx:controller="org.octopus.dialogs.setting.OctupusSettingController">
@@ -34,7 +38,81 @@
             <tabs>
                 <Tab text="General">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <GridPane prefHeight="432.0" prefWidth="600.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0"
+                                                           prefWidth="177.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0"
+                                                           prefWidth="317.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="361.0" minWidth="10.0"
+                                                           prefWidth="110.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="74.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="252.0" minHeight="0.0" prefHeight="68.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="336.0" minHeight="10.0" prefHeight="78.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="336.0" minHeight="10.0" prefHeight="74.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="336.0" minHeight="10.0" prefHeight="141.0"
+                                                        vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label prefHeight="44.0" prefWidth="211.0" text="Temparary Directory">
+                                            <GridPane.margin>
+                                                <Insets left="6.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="Maximum Multiparts" GridPane.rowIndex="1">
+                                            <GridPane.margin>
+                                                <Insets left="10.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label text="Buffer size" GridPane.rowIndex="2">
+                                            <padding>
+                                                <Insets left="10.0"/>
+                                            </padding>
+                                        </Label>
+                                        <TextField fx:id="buttonTempDownloadPath" prefHeight="38.0" prefWidth="298.0"
+                                                   GridPane.columnIndex="1">
+                                            <GridPane.margin>
+                                                <Insets/>
+                                            </GridPane.margin>
+                                            <font>
+                                                <Font size="16.0"/>
+                                            </font>
+                                        </TextField>
+                                        <TextField fx:id="buttonMultipartSize" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="1">
+                                            <GridPane.margin>
+                                                <Insets/>
+                                            </GridPane.margin>
+                                        </TextField>
+                                        <TextField fx:id="buttonBufferSize" GridPane.columnIndex="1"
+                                                   GridPane.rowIndex="2"/>
+                                        <Button fx:id="Browse" mnemonicParsing="false" prefHeight="38.0"
+                                                prefWidth="96.0" text="Browse" textAlignment="RIGHT"
+                                                GridPane.columnIndex="2">
+                                            <graphic>
+                                                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                                                           preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@/images/icons8-opened-folder-48.png"/>
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </Button>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </AnchorPane>
                     </content>
                 </Tab>
                 <Tab text="Proxy">
