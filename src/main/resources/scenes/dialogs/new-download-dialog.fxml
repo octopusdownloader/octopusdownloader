@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
-  ~ MIT License
+  ~ MIT License (MIT)
   ~
-  ~ Copyright (c) 2018 octopusdownloader
+  ~ Copyright (c) 2019 by octopusdownloader
   ~
   ~ Permission is hereby granted, free of charge, to any person obtaining a copy
   ~ of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="119.0" prefWidth="639.0"
-          xmlns="http://javafx.com/javafx/8.0.172-ea"
+          xmlns="http://javafx.com/javafx/8.0.121"
           fx:controller="org.octopus.dialogs.newdownload.AddNewDownloadController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -80,8 +80,8 @@
                         <Insets right="10.0"/>
                     </HBox.margin>
                 </TextField>
-                <Button mnemonicParsing="false" onAction="#openDirectoryPicker" prefHeight="34.0"
-                        prefWidth="154.0" text="Browse...">
+                <Button mnemonicParsing="false" onAction="#openDirectoryPicker" prefHeight="34.0" prefWidth="154.0"
+                        text="Browse...">
                     <graphic>
                         <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                             <image>

@@ -34,13 +34,13 @@
             minWidth="-Infinity" prefHeight="476.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121"
             fx:controller="org.octopus.dialogs.setting.OctupusSettingController">
     <center>
-        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <TabPane prefHeight="476.0" prefWidth="626.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
                 <Tab text="General">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <GridPane prefHeight="432.0" prefWidth="600.0">
+                                <GridPane layoutY="4.0" prefHeight="427.0" prefWidth="600.0">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="294.0" minWidth="10.0"
                                                            prefWidth="177.0"/>
@@ -94,8 +94,8 @@
                                         </TextField>
                                         <TextField fx:id="buttonBufferSize" GridPane.columnIndex="1"
                                                    GridPane.rowIndex="2"/>
-                                        <Button fx:id="Browse" mnemonicParsing="false" prefHeight="38.0"
-                                                prefWidth="96.0" text="Browse" textAlignment="RIGHT"
+                                        <Button fx:id="Browse" mnemonicParsing="false" onAction="#openDirectoryPicker"
+                                                prefHeight="38.0" prefWidth="96.0" text="Browse" textAlignment="RIGHT"
                                                 GridPane.columnIndex="2">
                                             <graphic>
                                                 <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"

@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -29,8 +29,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.octopus.alerts.CommonAlerts;
+import org.octopus.settings.OctopusGeneralSettings;
 import org.octopus.settings.OctopusProxySettings;
 import org.octopus.settings.OctopusSettings;
+
+import java.nio.file.Paths;
 
 public class OctupusSettingDialog extends Dialog<OctopusSettings> {
 
@@ -64,8 +67,10 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
         setResultConverter(buttonType -> {
             if (buttonType == applyButtonType) {
                 setProxySettings(octopusSettings, true);
+                setGeneralSettings(octopusSettings, true);
             } else if (buttonType == restorDefaultButtonType) {
                 setProxySettings(octopusSettings, false);
+                setGeneralSettings(octopusSettings, false);
             } else return null;
             return octopusSettings;
 
@@ -94,5 +99,20 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
         octopusProxySettings.setPort(port);
         octopusProxySettings.setProxyType(proxytype);
         octopusSettings.setProxySettings(octopusProxySettings);
+    }
+
+    private void setGeneralSettings(OctopusSettings octopusSettings, boolean setGeneralSetting) {
+        if (!setGeneralSetting) {
+            octopusSettings.setGeneralSettings(new OctopusGeneralSettings());
+            return;
+        }
+        OctopusGeneralSettings generalSettings = octopusSettings.getGeneralSettings();
+        generalSettings.setTempDownloadpath(Paths.get(controller.buttonTempDownloadPath.getText()));
+        generalSettings.setMultipartsize(Integer.parseInt(controller.buttonMultipartSize.getText()));
+        generalSettings.setBuffersize(Integer.parseInt(controller.buttonBufferSize.getText()));
+        generalSettings.setSetGeneralSetting(true);
+
+        //is this really needed?
+        octopusSettings.setGeneralSettings(generalSettings);
     }
 }
