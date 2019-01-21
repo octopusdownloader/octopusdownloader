@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -40,7 +40,11 @@ public class OctopusSettings {
     private static final String ROOT = System.getProperty("user.home");
     private static final String DIRECTORY = ".octopus";
     private static final String PROXY_FILENAME = "proxy_setting.ser";
+    private static final String GENARAL_FILENAME = "general_setting.ser";
     private static final Path PROXY_FILEPATH = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+    private static final Path GENERAL_FILEPATH = Paths.get(ROOT, DIRECTORY, GENARAL_FILENAME);
+
+    private String currentDownloadPath = ROOT;
     //null initialization
     private static volatile OctopusSettings instance = null;
     private OctopusGeneralSettings generalSettings;
@@ -50,13 +54,12 @@ public class OctopusSettings {
     private OctopusSettings() {
 
         //check the file is available
-        if (!checkFileAvailability()) {
+        if (!checkProxyFileAvailability()) {
             makedir();
-            this.generalSettings = new OctopusGeneralSettings();
-            this.proxySettings = new OctopusProxySettings(null);
+            this.proxySettings = new OctopusProxySettings();
         } else {
             ///else load from the file
-            this.proxySettings = Deserialize(PROXY_FILEPATH, OctopusProxySettings.class);
+            this.proxySettings = (OctopusProxySettings) Deserialize(PROXY_FILEPATH);
 
             //setting proxy
             if (proxySettings.getProxyType() != null)
@@ -65,6 +68,11 @@ public class OctopusSettings {
                 } else {
                     ProxySetting.setSocketProxy(proxySettings.getHost(), proxySettings.getPort());
                 }
+        }
+        if (!checkGeneralFileAvailability()) {
+            this.generalSettings = new OctopusGeneralSettings();
+        } else {
+            this.generalSettings = (OctopusGeneralSettings) Deserialize(GENERAL_FILEPATH);
         }
     }
 
@@ -80,10 +88,12 @@ public class OctopusSettings {
         try {
             //setting proxy setting
             setProxySettings();
-
             //ToDo general setting
 
-            SerializetoObject(PROXY_FILEPATH, OctopusProxySettings.class, this.proxySettings);
+            SerializetoObject(PROXY_FILEPATH, this.proxySettings);
+            SerializetoObject(GENERAL_FILEPATH, this.generalSettings);
+
+
 
         } catch (NullPointerException e) {
             e.printStackTrace();
@@ -106,20 +116,20 @@ public class OctopusSettings {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void SerializetoObject(Path path, Class<T> type, Object object) throws NullPointerException, IOException {
+    private void SerializetoObject(Path path, Object object) throws NullPointerException, IOException {
         ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
-        encoder.writeObject(type.cast(object));
+        encoder.writeObject(object);
         encoder.close();
 
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T Deserialize(Path path, Class<T> type) {
+    private Object Deserialize(Path path) {
 
-        T setting = null;
+        Object setting = null;
         try {
             ObjectInput decoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path.toString())));
-            setting = (T) decoder.readObject();
+            setting = decoder.readObject();
             decoder.close();
         } catch (FileNotFoundException e) {
             CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "File Not Found in" +
@@ -130,11 +140,16 @@ public class OctopusSettings {
             CommonAlerts.StackTraceAlert("Error", "Cant Read the File", "Octupus cant read the " +
                     "directory .Octupus in " + ROOT, e);
         }
-        return type.cast(setting);
+        return setting;
     }
 
-    private boolean checkFileAvailability() {
+    private boolean checkProxyFileAvailability() {
         Path path = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
+        return Files.exists(path);
+    }
+
+    private boolean checkGeneralFileAvailability() {
+        Path path = Paths.get(ROOT, DIRECTORY, GENARAL_FILENAME);
         return Files.exists(path);
     }
 
@@ -152,15 +167,15 @@ public class OctopusSettings {
     }
 
     public Path getTempDownloadBasepath() {
-        return Paths.get(System.getProperty("user.home"), ".octopus", "tmp");
+        return Paths.get(generalSettings.getTempDownloadpath());
     }
 
     public int getMaxDownloadParts() {
-        return 8;
+        return generalSettings.getMultipartsize();
     }
 
     public int getDownloadBufferSize() {
-        return 10240;
+        return generalSettings.getBuffersize();
     }
 
     public String getUserAgent() {

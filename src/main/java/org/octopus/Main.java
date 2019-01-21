@@ -1,7 +1,7 @@
 /*
- * MIT License
+ * MIT License (MIT)
  *
- * Copyright (c) 2019 octopusdownloader
+ * Copyright (c) 2019 by octopusdownloader
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.octopus.downloads.DownloadManager;
 
@@ -43,6 +44,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/scenes/octopus.fxml"));
         primaryStage.setTitle("Octopus");
+        primaryStage.setResizable(true);
+        primaryStage.getIcons().add(new Image("images/octo.png"));
         Scene scene = new Scene(root, 900, 500);
         primaryStage.setScene(scene);
         primaryStage.show();

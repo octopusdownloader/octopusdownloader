@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -25,11 +25,61 @@
 package org.octopus.settings;
 
 import java.io.Serializable;
+import java.nio.file.Paths;
 
 public class OctopusGeneralSettings implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 11232131231231L;
+
+    private static final String ROOT = System.getProperty("user.home");
+    private static final String DIRECTORY = ".octopus";
+    private static final String TEMP = "tmp";
+
+    private int multipartsize, buffersize;
+    private String tempDownloadpath;
+    private boolean setGeneralSetting;
 
     public OctopusGeneralSettings() {
+        //default settings
+        this.multipartsize = 8;
+        this.buffersize = 1024;
+        this.tempDownloadpath = Paths.get(ROOT, DIRECTORY, TEMP).toString();
+        this.setGeneralSetting = false;
+    }
+
+    public String getTempDownloadpath() {
+        return tempDownloadpath;
+    }
+
+    public void setTempDownloadpath(String tempDownloadpath) {
+        this.tempDownloadpath = tempDownloadpath;
+    }
+
+    public int getMultipartsize() {
+        return multipartsize;
+    }
+
+    public void setMultipartsize(int multipartsize) {
+        this.multipartsize = multipartsize;
+    }
+
+    public int getBuffersize() {
+        return buffersize;
+    }
+
+    public void setBuffersize(int buffersize) {
+        this.buffersize = buffersize;
+    }
+
+    public boolean isSetGeneralSetting() {
+        return setGeneralSetting;
+    }
+
+    public void setSetGeneralSetting(boolean setGeneralSetting) {
+        this.setGeneralSetting = setGeneralSetting;
+    }
+
+    public Object readResolve() {
+        return this;
     }
 }

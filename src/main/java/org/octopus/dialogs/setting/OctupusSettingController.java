@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -30,12 +30,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import org.octopus.settings.OctopusSettings;
+
+import java.io.File;
 
 
 public class OctupusSettingController {
 
+    //setting tab
     public ToggleGroup toggleGroup;
     public TextField httpPortText;
     public TextField httpHostText;
@@ -45,8 +49,12 @@ public class OctupusSettingController {
     public RadioButton buttonSocket;
     public OctopusSettings octopusSettings;
 
-    private Stage root;
+    //general setting tab
+    public TextField buttonTempDownloadPath;
+    public TextField buttonMultipartSize;
+    public TextField buttonBufferSize;
 
+    private Stage root;
     @FXML
     private void initialize() {
         octopusSettings = OctopusSettings.getInstance();
@@ -54,7 +62,7 @@ public class OctupusSettingController {
         buttonHttp.setToggleGroup(toggleGroup);
         buttonSocket.setToggleGroup(toggleGroup);
 
-        //loading from config file
+        //loading from proxy config file
         if (octopusSettings.getProxySettings().getProxyType() == null) {
             buttonHttp.setSelected(true);
             socketHostText.setDisable(true);
@@ -72,6 +80,10 @@ public class OctupusSettingController {
             httpHostText.setDisable(false);
             httpPortText.setDisable(false);
         }
+
+        buttonBufferSize.setText(String.valueOf(octopusSettings.getGeneralSettings().getBuffersize()));
+        buttonMultipartSize.setText(String.valueOf(octopusSettings.getGeneralSettings().getMultipartsize()));
+        buttonTempDownloadPath.setText(octopusSettings.getGeneralSettings().getTempDownloadpath());
     }
 
 
@@ -96,6 +108,15 @@ public class OctupusSettingController {
         }
     }
 
+    public void openDirectoryPicker(ActionEvent actionEvent) {
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDir = directoryChooser.showDialog(root);
+
+        if (selectedDir != null) {
+            buttonTempDownloadPath.setText(selectedDir.getAbsolutePath());
+        }
+    }
     public void setRoot(Stage root) {
         this.root = root;
     }
