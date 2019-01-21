@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -28,15 +28,15 @@ import java.io.Serializable;
 
 public class OctopusProxySettings implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 13434234234234234L;
 
     private String host, port, proxyType;
     // class to save the current proxy settings saved in setting>proxy
 
-    public OctopusProxySettings(String proxyType) {
+    public OctopusProxySettings() {
         this.host = "";
         this.port = "";
-        proxyType = null;
+        this.proxyType = null;
     }
 
     public String getHost() {

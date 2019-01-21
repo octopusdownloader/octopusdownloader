@@ -56,10 +56,10 @@ public class OctopusSettings {
         //check the file is available
         if (!checkProxyFileAvailability()) {
             makedir();
-            this.proxySettings = new OctopusProxySettings(null);
+            this.proxySettings = new OctopusProxySettings();
         } else {
             ///else load from the file
-            this.proxySettings = Deserialize(PROXY_FILEPATH, OctopusProxySettings.class);
+            this.proxySettings = (OctopusProxySettings) Deserialize(PROXY_FILEPATH);
 
             //setting proxy
             if (proxySettings.getProxyType() != null)
@@ -72,7 +72,7 @@ public class OctopusSettings {
         if (!checkGeneralFileAvailability()) {
             this.generalSettings = new OctopusGeneralSettings();
         } else {
-            this.generalSettings = Deserialize(GENERAL_FILEPATH, OctopusGeneralSettings.class);
+            this.generalSettings = (OctopusGeneralSettings) Deserialize(GENERAL_FILEPATH);
         }
     }
 
@@ -89,10 +89,10 @@ public class OctopusSettings {
             //setting proxy setting
             setProxySettings();
             //ToDo general setting
-            System.out.println(generalSettings.getTempDownloadpath() + " " + generalSettings.getMultipartsize());
-            SerializetoObject(GENERAL_FILEPATH, OctopusGeneralSettings.class, this.generalSettings);
 
-            SerializetoObject(PROXY_FILEPATH, OctopusProxySettings.class, this.proxySettings);
+            SerializetoObject(PROXY_FILEPATH, this.proxySettings);
+            SerializetoObject(GENERAL_FILEPATH, this.generalSettings);
+
 
 
         } catch (NullPointerException e) {
@@ -116,21 +116,20 @@ public class OctopusSettings {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void SerializetoObject(Path path, Class<T> type, Object object) throws NullPointerException, IOException {
+    private void SerializetoObject(Path path, Object object) throws NullPointerException, IOException {
         ObjectOutput encoder = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(path.toString())));
-        System.out.println(type.cast(object).toString());
-        encoder.writeObject(type.cast(object).toString());
+        encoder.writeObject(object);
         encoder.close();
 
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T Deserialize(Path path, Class<T> type) {
+    private Object Deserialize(Path path) {
 
-        T setting = null;
+        Object setting = null;
         try {
             ObjectInput decoder = new ObjectInputStream(new BufferedInputStream(new FileInputStream(path.toString())));
-            setting = (T) decoder.readObject();
+            setting = decoder.readObject();
             decoder.close();
         } catch (FileNotFoundException e) {
             CommonAlerts.StackTraceAlert("Error", "Cant Create Directory", "File Not Found in" +
@@ -141,7 +140,7 @@ public class OctopusSettings {
             CommonAlerts.StackTraceAlert("Error", "Cant Read the File", "Octupus cant read the " +
                     "directory .Octupus in " + ROOT, e);
         }
-        return type.cast(setting);
+        return setting;
     }
 
     private boolean checkProxyFileAvailability() {
@@ -168,7 +167,7 @@ public class OctopusSettings {
     }
 
     public Path getTempDownloadBasepath() {
-        return generalSettings.getTempDownloadpath();
+        return Paths.get(generalSettings.getTempDownloadpath());
     }
 
     public int getMaxDownloadParts() {

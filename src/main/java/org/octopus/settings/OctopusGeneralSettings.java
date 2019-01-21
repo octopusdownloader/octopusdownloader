@@ -25,33 +25,33 @@
 package org.octopus.settings;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class OctopusGeneralSettings implements Serializable {
+
+    private static final long serialVersionUID = 11232131231231L;
 
     private static final String ROOT = System.getProperty("user.home");
     private static final String DIRECTORY = ".octopus";
     private static final String TEMP = "tmp";
 
-    private static final long serialVersionUID = 1L;
     private int multipartsize, buffersize;
-    private Path tempDownloadpath;
+    private String tempDownloadpath;
     private boolean setGeneralSetting;
 
     public OctopusGeneralSettings() {
         //default settings
         this.multipartsize = 8;
         this.buffersize = 1024;
-        this.tempDownloadpath = Paths.get(ROOT, DIRECTORY, TEMP);
+        this.tempDownloadpath = Paths.get(ROOT, DIRECTORY, TEMP).toString();
         this.setGeneralSetting = false;
     }
 
-    public Path getTempDownloadpath() {
+    public String getTempDownloadpath() {
         return tempDownloadpath;
     }
 
-    public void setTempDownloadpath(Path tempDownloadpath) {
+    public void setTempDownloadpath(String tempDownloadpath) {
         this.tempDownloadpath = tempDownloadpath;
     }
 

@@ -33,8 +33,6 @@ import org.octopus.settings.OctopusGeneralSettings;
 import org.octopus.settings.OctopusProxySettings;
 import org.octopus.settings.OctopusSettings;
 
-import java.nio.file.Paths;
-
 public class OctupusSettingDialog extends Dialog<OctopusSettings> {
 
     ButtonType applyButtonType;
@@ -107,7 +105,7 @@ public class OctupusSettingDialog extends Dialog<OctopusSettings> {
             return;
         }
         OctopusGeneralSettings generalSettings = octopusSettings.getGeneralSettings();
-        generalSettings.setTempDownloadpath(Paths.get(controller.buttonTempDownloadPath.getText()));
+        generalSettings.setTempDownloadpath(controller.buttonTempDownloadPath.getText());
         generalSettings.setMultipartsize(Integer.parseInt(controller.buttonMultipartSize.getText()));
         generalSettings.setBuffersize(Integer.parseInt(controller.buttonBufferSize.getText()));
         generalSettings.setSetGeneralSetting(true);

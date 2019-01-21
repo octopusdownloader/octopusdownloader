@@ -1,5 +1,5 @@
 /*
- * The MIT License (MIT)
+ * MIT License (MIT)
  *
  * Copyright (c) 2019 by octopusdownloader
  *
@@ -44,9 +44,12 @@ public class OctupusSettingUnitTest {
     private static final String HOST = "cachex.pdn.ac.lk";
     private static final String PORT = "3128";
     private static final String PROXYTYPE = "http";
+    private static final int BUFFERSIZE = 2048;
+    private static final int PARTSIZE = 3;
     private static final String PROXY_FILENAME = "proxy_setting.ser";
+    private static final String GENARAL_FILENAME = "general_setting.ser";
     private static final Path PROXY_FILEPATH = Paths.get(ROOT, DIRECTORY, PROXY_FILENAME);
-
+    private static final Path GENERAL_FILEPATH = Paths.get(ROOT, DIRECTORY, GENARAL_FILENAME);
 
     //deleting folder n setting file
     @AfterClass
@@ -93,6 +96,25 @@ public class OctupusSettingUnitTest {
     public void HTTPProxyShouldSetNow() {
         assertEquals(HOST, System.getProperty("http.proxyHost"));
         assertEquals(PORT, System.getProperty("http.proxyPort"));
+    }
+
+    @Test
+    public void ShouldWriteGeneralSettingObjectFile() {
+        //OctopusMainSetting octopusMainSetting = new OctopusMainSetting();
+        OctopusSettings octopusSettings = OctopusSettings.getInstance();
+        OctopusGeneralSettings generalSettings = octopusSettings.getGeneralSettings();
+        generalSettings.setBuffersize(BUFFERSIZE);
+        generalSettings.setMultipartsize(PARTSIZE);
+        octopusSettings.SaveSettings();
+        assertTrue(Files.exists(GENERAL_FILEPATH));
+    }
+
+    @Test
+    public void ShouldReadGeneralSettingObject() {
+        OctopusSettings octopusSettings = OctopusSettings.getInstance();
+        assertEquals(BUFFERSIZE, octopusSettings.getGeneralSettings().getBuffersize());
+        assertEquals(PARTSIZE, octopusSettings.getGeneralSettings().getMultipartsize());
+
     }
 
 }

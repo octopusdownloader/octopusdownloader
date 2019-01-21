@@ -83,7 +83,7 @@ public class OctupusSettingController {
 
         buttonBufferSize.setText(String.valueOf(octopusSettings.getGeneralSettings().getBuffersize()));
         buttonMultipartSize.setText(String.valueOf(octopusSettings.getGeneralSettings().getMultipartsize()));
-        buttonTempDownloadPath.setText(octopusSettings.getGeneralSettings().getTempDownloadpath().toString());
+        buttonTempDownloadPath.setText(octopusSettings.getGeneralSettings().getTempDownloadpath());
     }
 
 
