@@ -24,11 +24,13 @@
 
 package org.octopus.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ProgressBarTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import org.octopus.dialogs.DownloadInfoDialog;
 import org.octopus.dialogs.newdownload.AddNewDownloadDialog;
 import org.octopus.dialogs.setting.OctupusSettingDialog;
 import org.octopus.downloads.DownloadManager;
@@ -158,8 +160,21 @@ public class MainController {
     public void onDelete(MouseEvent mouseEvent) {
         if (selectedTask == null) return;
 
-        selectedTask.getDownloadJob().deleteDownload();
-        tableView.getItems().remove(selectedTask);
-        selectedTask = null;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure do you want to delete?", ButtonType.NO, ButtonType.YES);
+        alert.setContentText("Are you sure do you want to delete?");
+        alert.setHeaderText("Delete this file?");
+        alert.showAndWait().ifPresent(buttonType -> {
+            if (buttonType == ButtonType.YES) {
+                selectedTask.getDownloadJob().deleteDownload();
+                tableView.getItems().remove(selectedTask);
+                selectedTask = null;
+            }
+        });
+    }
+
+    public void showInfo(ActionEvent actionEvent) {
+        if (selectedTask == null) return;
+        DownloadInfoDialog downloadInfoDialog = new DownloadInfoDialog(selectedTask.getDownloadJob());
+        downloadInfoDialog.showAndWait();
     }
 }
