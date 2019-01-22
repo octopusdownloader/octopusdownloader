@@ -75,7 +75,7 @@
                      </graphic>
                   </Button>
                    <Separator orientation="VERTICAL"/>
-                   <Button fx:id="downloadInfoButton" disable="true" mnemonicParsing="false">
+                   <Button fx:id="downloadInfoButton" disable="true" mnemonicParsing="false" onAction="#showInfo">
                      <graphic>
                         <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                            <image>
