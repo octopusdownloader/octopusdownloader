@@ -57,6 +57,15 @@ public class DownloadInfoDialog extends Dialog<Void> {
 
         grid.add(new Label("Saved to:"), 0, 2);
         grid.add(new Label(job.getBaseDirectory().toString()), 1, 2);
+
+        grid.add(new Label("Downloaded:"), 0, 3);
+        grid.add(new Label(job.getCompletedAmount() + " bytes"), 1, 3);
+
+        if (job.getFileSize() > 0) {
+            grid.add(new Label("File Size"), 0, 4);
+            grid.add(new Label(job.getFileSize() + " bytes"), 1, 4);
+        }
+
         getDialogPane().setContent(grid);
     }
 }

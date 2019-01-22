@@ -24,6 +24,7 @@
 
 package org.octopus.downloads;
 
+import org.octopus.alerts.CommonAlerts;
 import org.octopus.core.Downloader;
 import org.octopus.core.misc.ProgressReporter;
 import org.octopus.downloads.handlers.DownloadHandler;
@@ -153,17 +154,21 @@ public class DownloadJob {
         Files.move(paths.get(0), Paths.get(baseDirectory.toString(), fileName));
     }
 
+    public String getCompletedAmount() {
+        return Long.toString(progressReporter.getReceivedBytes());
+    }
+
     public void deleteDownload() {
         try {
             FileUtils.deleteDirectory(tempDownloadFolder);
         } catch (IOException e) {
-            e.printStackTrace();
+            CommonAlerts.StackTraceAlert("Error", "Something went wrong", e.getMessage(), e).showAndWait();
         }
 
         try {
             Files.delete(Paths.get(baseDirectory.toString(), fileName));
         } catch (IOException e) {
-            e.printStackTrace();
+            CommonAlerts.StackTraceAlert("Error", "Something went wrong", e.getMessage(), e).showAndWait();
         }
     }
 
