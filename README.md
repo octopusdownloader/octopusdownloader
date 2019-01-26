@@ -8,6 +8,12 @@
 
 A simple crossplatform downloader powered by Java
 
+# Features
+- Multiparts downloads
+- Proxy network configurations
+- URL inspector
+
+
 # Development
 
 ## Requirements
